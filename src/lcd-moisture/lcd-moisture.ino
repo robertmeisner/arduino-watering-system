@@ -1,8 +1,16 @@
-
+#include <Arduino.h>
 #include <EdgeDebounceLite.h>
-#include "SSD1306Ascii.h"
-#include "SSD1306AsciiAvrI2c.h"
+#include <SSD1306Ascii.h>
+#include <SSD1306AsciiAvrI2c.h>
 #define VERSION 2.0
+//#define DEBUG   //If you comment this line, the DPRINT & DPRINTLN lines are defined as blank.
+#ifdef DEBUG    //Macros are usually in all capital letters.
+  #define DPRINT(...)    Serial.print(__VA_ARGS__)     //DPRINT is a macro, debug print
+  #define DPRINTLN(...)  Serial.println(__VA_ARGS__)   //DPRINTLN is a macro, debug print with new line
+#else
+  #define DPRINT(...)     //now defines a blank line
+  #define DPRINTLN(...)   //now defines a blank line
+#endif
 // 0X3C+SA0 - 0x3C or 0x3D
 #define I2C_ADDRESS 0x3C
 
@@ -14,8 +22,8 @@ EdgeDebounceLite debounce;
 // https://github.com/greiman/SSD1306Ascii
 
 /**
- * Machine states declarations
- */
+   Machine states declarations
+*/
 enum MoistureStates
 {
   STATE_READ,
@@ -71,13 +79,16 @@ enum class DisplayStates : byte
 };
 DisplayStates displayState = DisplayStates::STATE_MOISTURE;
 /**
- * MOISTURE machine
- */
+   MOISTURE machine
+*/
 
 byte moisturePin[2] = {A1, A2};
-byte moistureReadings[2][8] = {
-    {100, 100, 100, 100, 100, 100, 100, 100},
-    {100, 100, 100, 100, 100, 100, 100, 100}};
+int moistureReadings[2][8] = {
+  {100, 100, 100, 100, 100, 100, 100, 100},
+  {100, 100, 100, 100, 100, 100, 100, 100}
+};
+int moistureReadingsCount = 8;
+int moistureSensorCount = 2;
 byte moistureReadingNumber = 1;
 #define MOISTURE_READING_DELAY 120000
 unsigned long moistureReadingChrono;
@@ -85,9 +96,9 @@ unsigned long moistureReadingChrono;
 void readMoisture()
 {
   digitalWrite(3, HIGH); //zasilanie
-  delay(200);
+  delay(1000);
   moistureReadingNumber++;
-  for (byte i = 0; i < sizeof(moistureReadings) / sizeof(moistureReadings[0]); i++)
+  for (byte i = 0; i < moistureSensorCount; i++)
   {
 
     int value = analogRead(moisturePin[i]); // Read analog value
@@ -95,21 +106,25 @@ void readMoisture()
     value = map(value, 400, 1023, 100, 0);
     moistureReadings[i][moistureReadingNumber - 1] = value;
 
-    if (moistureReadingNumber > sizeof(moistureReadings[0]) - 1)
-    {
-      moistureReadingNumber = 0;
-    }
+
+  }
+  if (moistureReadingNumber > moistureReadingsCount - 1 )
+  {
+    moistureReadingNumber = 0;
   }
   digitalWrite(3, LOW);
 }
 int moistureSensorAvg(int i)
 {
   int avg = 0;
-  for (byte j = 0; j < sizeof(moistureReadings[i]); j++)
+  for (byte j = 0; j < moistureReadingsCount; j++)
   {
     avg += moistureReadings[i][j];
   }
-  return avg / sizeof(moistureReadings[i]);
+  DPRINTLN(avg);
+  DPRINTLN(moistureReadingsCount);
+
+  return avg / moistureReadingsCount;
 }
 void moistureMachineInit()
 {
@@ -119,25 +134,25 @@ void moistureMachine()
 {
   switch (moistureState)
   {
-  case (MoistureStates::STATE_IDLE):
-    if (millis() - moistureReadingChrono >= MOISTURE_READING_DELAY)
-    {
-      //disable electricity
-      moistureState = MoistureStates::STATE_READ;
-    }
-    break;
-  case (MoistureStates::STATE_READ):
-    readMoisture();
-    moistureState = MoistureStates::STATE_IDLE;
-    moistureReadingChrono = millis();
-    break;
-  default:
-    break;
+    case (MoistureStates::STATE_IDLE):
+      if (millis() - moistureReadingChrono >= MOISTURE_READING_DELAY)
+      {
+        //disable electricity
+        moistureState = MoistureStates::STATE_READ;
+      }
+      break;
+    case (MoistureStates::STATE_READ):
+      readMoisture();
+      moistureState = MoistureStates::STATE_IDLE;
+      moistureReadingChrono = millis();
+      break;
+    default:
+      break;
   }
 }
 /**
- * SWITCH MACHINE
- */
+   SWITCH MACHINE
+*/
 byte switchPin = 2;
 
 void switchMachineInit()
@@ -151,29 +166,29 @@ void switchMachine()
     pinIs = !pinIs; //Reverse the read if Pullup
   switch (switchState)
   {
-  case (SwitchStates::STATE_CLOSED):
-    if (pinIs == LOW)                               //If pin is LOW
-      switchState = SwitchStates::STATE_IS_FALLING; //Change state to IS_FALLING
-    break;
-  case (SwitchStates::STATE_IS_FALLING):
-    //TODO             //Do something (The switch has been clicked)
-    switchState = SwitchStates::STATE_OPEN; //Change state to IS_OPEN (Not falling anymore)
-    break;
-  case (SwitchStates::STATE_OPEN):
-    if (pinIs == HIGH)                          //If pin is HIGH
-      switchState = SwitchStates::STATE_RISING; //Change state to IS_RISING
-    break;
-  case (SwitchStates::STATE_RISING):
-    switchState = SwitchStates::STATE_CLOSED; //Change state to IS_CLOSED (Not rising anymore)
-    break;
+    case (SwitchStates::STATE_CLOSED):
+      if (pinIs == LOW)                               //If pin is LOW
+        switchState = SwitchStates::STATE_IS_FALLING; //Change state to IS_FALLING
+      break;
+    case (SwitchStates::STATE_IS_FALLING):
+      //TODO             //Do something (The switch has been clicked)
+      switchState = SwitchStates::STATE_OPEN; //Change state to IS_OPEN (Not falling anymore)
+      break;
+    case (SwitchStates::STATE_OPEN):
+      if (pinIs == HIGH)                          //If pin is HIGH
+        switchState = SwitchStates::STATE_RISING; //Change state to IS_RISING
+      break;
+    case (SwitchStates::STATE_RISING):
+      switchState = SwitchStates::STATE_CLOSED; //Change state to IS_CLOSED (Not rising anymore)
+      break;
 
-  default:
-    break;
+    default:
+      break;
   }
 }
 /**
- * PUMP MACHINE
- */
+   PUMP MACHINE
+*/
 byte pumpPin = 10;
 
 void pumpOn()
@@ -193,28 +208,28 @@ void pumpMachine()
 
   switch (pumpState)
   {
-  case (PumpStates::STATE_OFF):
-    digitalWrite(pumpPin, HIGH);
-    if (wateringState == WateringMachineStates::STATE_CYCLE_ON)
-    {
-      pumpState = PumpStates::STATE_ON;
-    }
-    break;
-  case (PumpStates::STATE_ON):
-    digitalWrite(pumpPin, LOW);
-    if (wateringState == WateringMachineStates::STATE_CYCLE_PAUSE || wateringState == WateringMachineStates::STATE_WAIT)
-    {
-      pumpState = PumpStates::STATE_OFF;
-    }
-    break;
-  default:
-    break;
+    case (PumpStates::STATE_OFF):
+      digitalWrite(pumpPin, HIGH);
+      if (wateringState == WateringMachineStates::STATE_CYCLE_ON)
+      {
+        pumpState = PumpStates::STATE_ON;
+      }
+      break;
+    case (PumpStates::STATE_ON):
+      digitalWrite(pumpPin, LOW);
+      if (wateringState == WateringMachineStates::STATE_CYCLE_PAUSE || wateringState == WateringMachineStates::STATE_WAIT)
+      {
+        pumpState = PumpStates::STATE_OFF;
+      }
+      break;
+    default:
+      break;
   }
 }
 
 /**
- * WATER LEVEL MACHINE
- */
+   WATER LEVEL MACHINE
+*/
 
 bool waterLevelCheck()
 {
@@ -225,32 +240,32 @@ void waterLevelMachine()
 
   switch (waterLevelState)
   {
-  case (WaterLevelStates::STATE_OK):
-    if (!waterLevelCheck())
-    {
-      waterLevelState = WaterLevelStates::STATE_NOT_OK;
-    }
-    break;
-  case (WaterLevelStates::STATE_NOT_OK):
-    if (waterLevelCheck())
-    {
-      waterLevelState = WaterLevelStates::STATE_OK;
-    }
-    break;
+    case (WaterLevelStates::STATE_OK):
+      if (!waterLevelCheck())
+      {
+        waterLevelState = WaterLevelStates::STATE_NOT_OK;
+      }
+      break;
+    case (WaterLevelStates::STATE_NOT_OK):
+      if (waterLevelCheck())
+      {
+        waterLevelState = WaterLevelStates::STATE_OK;
+      }
+      break;
 
-  default:
-    break;
+    default:
+      break;
   }
 }
 
 /**
- * WATERING MACHINE
- */
+   WATERING MACHINE
+*/
 
-#define WATERING_CYCLE_DURATION 5000
-#define WATERING_CYCLES 190
-#define WATERING_CYCLE_PAUSE_DURATION 6000
-#define WATERING_MOISTURE_CRITICAL 40
+#define WATERING_CYCLE_DURATION 10000
+#define WATERING_CYCLES 250
+#define WATERING_CYCLE_PAUSE_DURATION 5000
+#define WATERING_MOISTURE_CRITICAL 45
 unsigned int wateringCycleCount = 0;
 unsigned long wateringCycleChrono;
 unsigned long wateringCyclePauseChrono;
@@ -259,7 +274,7 @@ bool wateringNeeded()
 {
 
   bool critical = false;
-  for (byte i = 0; i < sizeof(moistureReadings) / sizeof(moistureReadings[0]); i++)
+  for (byte i = 0; i < moistureSensorCount; i++)
   {
     int avg = moistureSensorAvg(i);
     if (avg < WATERING_MOISTURE_CRITICAL)
@@ -267,8 +282,6 @@ bool wateringNeeded()
       critical = true;
     }
   }
-  Serial.println("wateringNeeded");
-  Serial.println(critical);
   return critical;
 }
 void wateringMachineInit()
@@ -279,40 +292,47 @@ void wateringMachine()
 
   switch (wateringState)
   {
-  case (WateringMachineStates::STATE_WAIT):
-    if (wateringNeeded())
-    {
-      wateringCycleChrono = millis();
-      wateringState = WateringMachineStates::STATE_CYCLE_ON;
-    }
-    break;
-  case (WateringMachineStates::STATE_CYCLE_ON):
-    if (wateringCycleCount > WATERING_CYCLES)
-    {
-      wateringCycleCount = 0;
-      wateringState = WateringMachineStates::STATE_WAIT;
-    }
-    if (millis() - wateringCycleChrono >= WATERING_CYCLE_DURATION)
-    {
-      wateringCyclePauseChrono = millis();
-      wateringState = WateringMachineStates::STATE_CYCLE_PAUSE;
-    }
-    break;
-  case (WateringMachineStates::STATE_CYCLE_PAUSE):
-    if (millis() - wateringCyclePauseChrono >= WATERING_CYCLE_PAUSE_DURATION)
-    {
-      wateringCycleChrono = millis();
-      wateringState = WateringMachineStates::STATE_CYCLE_ON;
-    }
-    break;
+    case (WateringMachineStates::STATE_WAIT):
+      if (wateringNeeded())
+      {
+        
+        DPRINTLN("WATERING NEEDED");
+        wateringCycleChrono = millis();
+        wateringState = WateringMachineStates::STATE_CYCLE_ON;
+      }else{
+        DPRINTLN("WATERING NOT NEEDED");
+      }
+      break;
+    case (WateringMachineStates::STATE_CYCLE_ON):
 
-  default:
-    break;
+      if (wateringCycleCount > WATERING_CYCLES)
+      {
+        wateringCycleCount = 0;
+        wateringState = WateringMachineStates::STATE_WAIT;
+      }
+      if (millis() - wateringCycleChrono >= WATERING_CYCLE_DURATION)
+      {
+        wateringCycleCount = wateringCycleCount + 1;
+        wateringCyclePauseChrono = millis();
+        wateringState = WateringMachineStates::STATE_CYCLE_PAUSE;
+      }
+      break;
+    case (WateringMachineStates::STATE_CYCLE_PAUSE):
+      if (millis() - wateringCyclePauseChrono >= WATERING_CYCLE_PAUSE_DURATION)
+      {
+        wateringCycleChrono = millis();
+        wateringState = WateringMachineStates::STATE_CYCLE_ON;
+      }
+      break;
+
+
+    default:
+      break;
   }
 }
 /**
- * LIGHT MACHINE
- */
+   LIGHT MACHINE
+*/
 #define LIGHT_DURATION 3600000  //1h in ms
 #define LIGHT_INTERVAL 86400000 //24h in ms
 unsigned long lightChrono;
@@ -330,22 +350,22 @@ void lightMachine()
 
   switch (lightState)
   {
-  case (LightStates::STATE_ON):
-    digitalWrite(lightPin, LOW);
-    if (wateringState == WateringMachineStates::STATE_WAIT && millis() - lightChrono >= LIGHT_DURATION)
-    {
-      lightTurnOff();
-    }
-    break;
-  case (LightStates::STATE_OFF):
-    digitalWrite(lightPin, HIGH);
-    if (millis() - lightOffChrono >= LIGHT_INTERVAL)
-    {
-      lightTurnOn();
-    }
-    break;
-  default:
-    break;
+    case (LightStates::STATE_ON):
+      digitalWrite(lightPin, LOW);
+      if (wateringState == WateringMachineStates::STATE_WAIT && millis() - lightChrono >= LIGHT_DURATION)
+      {
+        lightTurnOff();
+      }
+      break;
+    case (LightStates::STATE_OFF):
+      digitalWrite(lightPin, HIGH);
+      if (millis() - lightOffChrono >= LIGHT_INTERVAL)
+      {
+        lightTurnOn();
+      }
+      break;
+    default:
+      break;
   }
 }
 void lightTurnOn()
@@ -359,14 +379,14 @@ void lightTurnOff()
   lightOffChrono = millis();
 }
 /**
- * DISPLAY MACHINE
- */
+   DISPLAY MACHINE
+*/
 #define DISPLAY_SLEEP_DELAY 60000
 unsigned long sleepChrono;
 
 unsigned long lastScreenOff = millis();
 bool displayDisplayed = false;
-bool displayNextState(DisplayStates state); // i beleive its arduino specific stuff, needed to pass Enum as parametr
+bool displayNextState(DisplayStates state); // i believe its arduino specific stuff, needed to pass Enum as parametr
 bool displayNextState(DisplayStates state)
 {
   if (switchState == SwitchStates::STATE_IS_FALLING)
@@ -396,86 +416,90 @@ void displayWaterLevelInfo()
   oled.set2X();
   switch (waterLevelState)
   {
-  case (WaterLevelStates::STATE_NOT_OK):
-    oled.println("WATER LEVEL");
-    oled.println();
-    oled.println("NOT OK");
+    case (WaterLevelStates::STATE_NOT_OK):
+      oled.println("WATER LEVEL");
+      oled.println();
+      oled.println("NOT OK");
+      break;
+    case (WaterLevelStates::STATE_OK):
+      oled.println("WATER LEVEL");
+      oled.println();
+      oled.println("OK");
+      break;
 
-    break;
-  case (WaterLevelStates::STATE_OK):
-    oled.println("WATER LEVEL");
-    oled.println();
-    oled.println("OK");
-
-    break;
-
-  default:
-    break;
+    default:
+      break;
   }
 }
 void displayWateringInfo()
 {
   /**
-   * 1.OFF
-   * Watering is OFF
-   * 
-   * 2. CYCLE_ON
-   * Watering is ON 
-   * CYCLE 12/190
-   * CYCLE ENDS IN 12s
-   * 
-   * 3. CYCLE_OFF
-   * Watering is ON 
-   * CYCLE 12/190
-   * NEXT STARTS IN 12s
-   */
+     1.OFF
+     Watering is OFF
+
+     2. CYCLE_ON
+     Watering is ON
+     CYCLE 12/190
+     CYCLE ENDS IN 12s
+
+     3. CYCLE_OFF
+     Watering is ON
+     CYCLE 12/190
+     NEXT STARTS IN 12s
+  */
   String wateringString = "Watering is ";
   String wateringONString = "ON";
   String wateringOFFString = "OFF";
   String wateringPAUSEDString = "PAUSED";
   String wateringNEXTString = "NEXT IN ";
   String wateringENDSString = "ENDS IN ";
-  String wateringCYCLEString = "CYCLES";
+  String wateringCYCLEString = "CYCLE ";
   String wateringSlashString = "/";
   oled.set1X();
   switch (wateringState)
   {
-  case (WateringMachineStates::STATE_WAIT):
-    oled.println(wateringString);
-    oled.println();
-    oled.set2X();
-    oled.println(wateringOFFString);
-    /* code */
-    break;
-  case (WateringMachineStates::STATE_CYCLE_ON):
-    oled.println(wateringONString);
-    oled.println(wateringOFFString);
-    oled.print(wateringENDSString + millisToTime(millis() - wateringCycleChrono));
-    /* code */
-    break;
-  case (WateringMachineStates::STATE_CYCLE_PAUSE):
-    oled.println(wateringString);
-    oled.println(wateringPAUSEDString);
-    oled.print(wateringNEXTString + millisToTime(millis() - wateringCyclePauseChrono));
-    break;
+    case (WateringMachineStates::STATE_WAIT):
+      oled.println(wateringString);
+      oled.println();
+      oled.set2X();
+      oled.println(wateringOFFString);
+      break;
+    case (WateringMachineStates::STATE_CYCLE_ON):
+      oled.print(wateringString);
+      oled.println(wateringONString);
+      oled.print(wateringCYCLEString);
+      oled.print(wateringCycleCount);
+      oled.print("/");
+      oled.println(WATERING_CYCLES);
+      oled.println(wateringENDSString + millisToTime(millis() - wateringCycleChrono));
+      break;
+    case (WateringMachineStates::STATE_CYCLE_PAUSE):
+      oled.print(wateringString);
+      oled.println(wateringPAUSEDString);
+      oled.print(wateringCYCLEString);
+      oled.print(wateringCycleCount);
+      oled.print("/");
+      oled.println(WATERING_CYCLES);
+      oled.println(wateringNEXTString + millisToTime(millis() - wateringCyclePauseChrono));
+      break;
 
-  default:
-    oled.set2X();
-    oled.println("ERROR");
-    oled.println("UNKNOWN");
-    oled.println("STATUS");
-    break;
+    default:
+      oled.set2X();
+      oled.println("ERROR");
+      oled.println("UNKNOWN");
+      oled.println("STATUS");
+      break;
   }
 }
 void displayMoistureInfo()
 {
 
   /**
-   * MOISTURE LEVEL
-   * S1: 50 AVG:60
-   * S2: 40 AVG:50
-   * CRIT AVG: 40
-   */
+     MOISTURE LEVEL
+     S1: 50 AVG:60
+     S2: 40 AVG:50
+     CRIT AVG: 40
+  */
 
   oled.clear();
   oled.println("MOISTURE LEVEL");
@@ -494,30 +518,30 @@ void displayMoistureInfo()
 void displayLightInfo()
 {
   /**
-   * 1.
-   * LIGHT OF
-   * ON IN 1233s 
-   * 2.
-   * LIGHT ON
-   * OFF IN 1233s
-   */
+     1.
+     LIGHT OF
+     ON IN 1233s
+     2.
+     LIGHT ON
+     OFF IN 1233s
+  */
   String _stringLightOn = "LIGHT ON";
   String _stringLightOnIn = "ON IN ";
   String _stringLightOff = "LIGHT OFF";
   String _stringLightOffIn = "OFF IN ";
   switch (lightState)
   {
-  case (LightStates::STATE_ON):
-    oled.println(_stringLightOn);
-    oled.println(_stringLightOffIn + millisToTime(LIGHT_DURATION - (millis() - lightChrono)));
-    break;
-  case (LightStates::STATE_OFF):
-    oled.println(_stringLightOff);
-    oled.println(_stringLightOnIn + millisToTime(LIGHT_INTERVAL - (millis() - lightOffChrono)));
-    break;
+    case (LightStates::STATE_ON):
+      oled.println(_stringLightOn);
+      oled.println(_stringLightOffIn + millisToTime(LIGHT_DURATION - (millis() - lightChrono)));
+      break;
+    case (LightStates::STATE_OFF):
+      oled.println(_stringLightOff);
+      oled.println(_stringLightOnIn + millisToTime(LIGHT_INTERVAL - (millis() - lightOffChrono)));
+      break;
 
-  default:
-    break;
+    default:
+      break;
   }
 }
 void displayMachineInit()
@@ -534,14 +558,14 @@ void displayMachineInit()
   oled.clear();
   oled.println("Welcome!");
   oled.set2X();
-  oled.println("Watering System");
+  oled.println("Watering");
+  oled.println("System");
   oled.set1X();
-  oled.println();
   oled.print("\nversion: ");
   oled.println(VERSION);
   oled.println("A long line may be truncated");
 
-  delay(1000);
+  delay(3000);
 }
 void checkSleep()
 {
@@ -557,60 +581,62 @@ void displayMachine()
 
   switch (displayState)
   {
-  case (DisplayStates::STATE_OFF):
-    displaySleep();
-    if (displayNextState(DisplayStates::STATE_MOISTURE))
-    {
-      displayDisplayed = false;
-      displayWake();
-    }
-    break;
-  case (DisplayStates::STATE_MOISTURE):
-    checkSleep();
-    if (!displayDisplayed)
-    {
-      displayMoistureInfo();
-      displayDisplayed = true;
-    }
-    displayNextState(DisplayStates::STATE_WATERING);
+    case (DisplayStates::STATE_OFF):
+      displaySleep();
+      if (displayNextState(DisplayStates::STATE_MOISTURE))
+      {
+        displayDisplayed = false;
+        displayWake();
+      }
+      break;
+    case (DisplayStates::STATE_MOISTURE):
+      checkSleep();
+      if (!displayDisplayed)
+      {
+        displayMoistureInfo();
+        displayDisplayed = true;
+      }
+      displayNextState(DisplayStates::STATE_WATERING);
 
-    break;
-  case (DisplayStates::STATE_WATERING):
-    checkSleep();
+      break;
+    case (DisplayStates::STATE_WATERING):
+      checkSleep();
 
-    if (!displayDisplayed)
-    {
-      displayWateringInfo();
-      displayDisplayed = true;
-    }
-    displayNextState(DisplayStates::STATE_WATER_LEVEL);
+      if (!displayDisplayed)
+      {
+        displayWateringInfo();
+        displayDisplayed = true;
+      }
+      displayNextState(DisplayStates::STATE_WATER_LEVEL);
 
-    break;
-  case (DisplayStates::STATE_WATER_LEVEL):
-    checkSleep();
+      break;
+    case (DisplayStates::STATE_WATER_LEVEL):
+      checkSleep();
 
-    if (!displayDisplayed)
-    {
-      displayWaterLevelInfo();
-      displayDisplayed = true;
-    }
-    displayNextState(DisplayStates::STATE_LIGHT);
+      if (!displayDisplayed)
+      {
+        displayWaterLevelInfo();
+        displayDisplayed = true;
+      }
+      displayNextState(DisplayStates::STATE_LIGHT);
 
-    break;
-  case (DisplayStates::STATE_LIGHT):
-    checkSleep();
+      break;
+    case (DisplayStates::STATE_LIGHT):
+      checkSleep();
 
-    if (!displayDisplayed)
-    {
-      displayLightInfo();
-      displayDisplayed = true;
-    }
-    displayNextState(DisplayStates::STATE_OFF);
+      if (!displayDisplayed)
+      {
+        displayLightInfo();
+        displayDisplayed = true;
+      }
+      displayNextState(DisplayStates::STATE_OFF);
 
-    break;
+      break;
 
-  default:
-    break;
+    default:
+      oled.println("Display ERROR");
+      oled.println(static_cast<int>(displayState));
+      break;
   }
 }
 //if all your time calculations are done as:
@@ -632,6 +658,7 @@ String millisToTime(unsigned long milliseconds)
 
   return timeString;
 }
+
 void setup()
 {
   Serial.begin(9600);
