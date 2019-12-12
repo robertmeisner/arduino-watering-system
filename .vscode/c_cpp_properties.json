@@ -3,6 +3,8 @@
         {
             "name": "Win32",
             "includePath": [
+                "C:\\Users\\cem\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\**",
+                "C:\\Users\\cem\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.1\\**",
                 "C:\\Users\\cem\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.5.0\\**",
                 "/Program Files (x86)/Arduino\\tools\\**",
                 "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\**",
@@ -17,7 +19,6 @@
                 "UNICODE",
                 "_UNICODE"
             ],
-            "windowsSdkVersion": "",
             "intelliSenseMode": "clang-x64",
             "forcedInclude": []
         },

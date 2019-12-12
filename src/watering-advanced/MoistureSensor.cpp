@@ -9,36 +9,65 @@
 
 MoistureSensor::MoistureSensor(int pin)
 {
-  pinMode(pin, OUTPUT);
+  //set all values to full wet
+  for (byte j = 0; j < MOISTURE_READINGS_COUNT; j++)
+  {
+    this->_moistureReadings[j] = 100;
+  }
   _pin = pin;
 }
 
 int MoistureSensor::read()
 {
-  //digitalWrite(_pin, HIGH);
-  //delay(250);
-  //digitalWrite(_pin, LOW);
-  //delay(250);
-  //digitalWrite(_pin, HIGH); //zasilanie
-  //delay(1000);
-  this->_moistureReadingNumber++;
-
-  int value = analogRead(this->_pin); // Read analog value
-  value = constrain(value, 400, 1023);    // Keep the ranges!
-  value = map(value, 400, 1023, 100, 0);
-  this->_moistureReadings[_moistureReadingNumber - 1] = value;
-
-  if (_moistureReadingNumber > 7)
+  if (this->nextState(MoistureSensorCommand::COMMAND_READ) == MoistureSensorStates::STATE_READING)
   {
-    _moistureReadingNumber = 0;
+    this->_moistureReadingNumber++;
+
+    int value = analogRead(this->_pin);  // Read analog value
+    value = constrain(value, 400, 1023); // Keep the ranges!
+    value = map(value, 400, 1023, 100, 0);
+    this->_moistureReadings[this->_moistureReadingNumber - 1] = value;
+
+    if (this->_moistureReadingNumber > 7)
+    {
+      this->_moistureReadingNumber = 0;
+    }
+
+    this->nextState(MoistureSensorCommand::COMMAND_FINISHED_READ);
+    return value;
   }
-  digitalWrite(3, LOW);
+  return -1;
 }
 
 int MoistureSensor::readAvg()
 {
-  digitalWrite(_pin, HIGH);
-  delay(1000);
-  digitalWrite(_pin, LOW);
-  delay(250);
+  int avg = 0;
+  for (byte j = 0; j < MOISTURE_READINGS_COUNT; j++)
+  {
+    avg += this->_moistureReadings[j];
+  }
+
+  return avg / MOISTURE_READINGS_COUNT;
+}
+MoistureSensorStates MoistureSensor::nextState(MoistureSensorCommand command)
+{
+  switch (this->state)
+  {
+  case MoistureSensorStates::STATE_IDLE:
+    if (MoistureSensorCommand::COMMAND_READ)
+    {
+      this->state = MoistureSensorStates::STATE_READING;
+    }
+    break;
+  case MoistureSensorStates::STATE_READING:
+    if (MoistureSensorCommand::COMMAND_FINISHED_READ)
+    {
+      this->state = MoistureSensorStates::STATE_IDLE;
+    }
+    break;
+
+  default:
+    break;
+  }
+  return this->state;
 }

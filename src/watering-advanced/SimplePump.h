@@ -3,35 +3,25 @@
   Created by Robert Meisner, November 2, 2007.
   Released into the public domain.
 */
-#ifndef Pump_h
+#ifndef SimplePump_h
 #include "state-machine/PumpStateMachine.h"
-#define Pump_h
+#define SimplePump_h
 
-enum PumpStates
-{
-  STATE_OFF,
-  STATE_ON
-};
-enum PumpCommand
-{
-  COMMAND_START,
-  COMMAND_STOP
 
-};
-class Pump : public PumpStateMachine
+class SimplePump : public PumpStateMachine
 {
 public:
-  Pump(int pin);
+  SimplePump(int pin, int initialSpeed);
 
-  bool start();
+  bool start(int speed = 100);
   bool stop();
+  bool changeSpeed(int speed);
   int getTimeRunning();
-
-  PumpStates state = PumpStates::STATE_OFF;
+  int speed = 0;
 
 private:
   int _pin;
-  void nextState();
+  PumpStates nextState(PumpCommand p);
 };
 
 #endif

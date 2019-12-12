@@ -1,10 +1,24 @@
 #include "StateMachine.h"
+enum PumpStates
+{
+    STATE_OFF,
+    STATE_ON
+};
+enum PumpCommand
+{
+    COMMAND_START,
+    COMMAND_STOP
+
+};
 class PumpStateMachine : public StateMachine
 {
 public:
-    virtual void drawScreen() = 0; // Needs to be implemented by each subclass
-
+    PumpStates state = PumpStates::STATE_OFF;
     virtual ~PumpStateMachine() {} // Destructor
+    virtual bool start(int speed) = 0;
+    virtual bool changeSpeed(int speed) = 0;
+    virtual bool stop() = 0;
+
 private:
-    virtual void nextState() = 0;
+    virtual PumpStates nextState(PumpCommand command) = 0; // Needs to be implemented by each subclass
 };

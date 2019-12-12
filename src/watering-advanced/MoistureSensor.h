@@ -3,28 +3,39 @@
   Created by Robert Meisner, November 2, 2007.
   Released into the public domain.
 */
+
+#ifndef MOISTURE_READINGS_COUNT
+#define MOISTURE_READINGS_COUNT 8
+#endif
 #ifndef MoistureSensor_h
 #define MoistureSensor_h
 
 enum MoistureSensorStates
 {
-    STATE_READ,
-    STATE_IDLE
+  STATE_READING,
+  STATE_IDLE
+};
+enum MoistureSensorCommand
+{
+  COMMAND_READ,
+  COMMAND_FINISHED_READ
 };
 
 class MoistureSensor
 {
-  public:
-    MoistureSensor(int pin);
+public:
+  MoistureSensor(int pin);
 
-    int read();
-    int readAvg();
-    MoistureSensorStates moistureState = MoistureSensorStates::STATE_READ;
+  int read();
+  int readAvg();
+  MoistureSensorStates moistureState = MoistureSensorStates::STATE_IDLE;
 
-  private:
-    int _pin;
-    int _moistureReadingNumber = 0;
-    int _moistureReadings[8] = {100, 100, 100, 100, 100, 100, 100, 100};
+private:
+  MoistureSensorStates state = MoistureSensorStates::STATE_IDLE;
+  int _pin;
+  int _moistureReadingNumber = 0;
+  int _moistureReadings[MOISTURE_READINGS_COUNT];
+  MoistureSensorStates nextState(MoistureSensorCommand p);
 };
 
 #endif
