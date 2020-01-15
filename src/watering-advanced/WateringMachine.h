@@ -1,4 +1,5 @@
 
+//https://www.drdobbs.com/cpp/state-patterns-c/184404132?pgno=1
 #ifndef WateringMachine_h
 #include "state-pattern/WateringMachineStateBase.h"
 #include "Light.h"
@@ -7,25 +8,34 @@
 
 #define WateringMachine_h
 
+class IdleState;
+
 class WateringMachine
 {
-private:
+public:
     WateringMachineStateBase state;
-    int lastWateringChrono;
-    int lastLightingChrono;
-    int lightingInterval;
-    int lightingDuration;
-    int lastMoistureChrono;
-    int avgMoisture;
-    Light* light;
-    MoistureSensor* moisture[2];
-    SimplePump* pump;
-    WateringMachine(int lightPin,int moisturePin1,int moisturePin2)
+    Light light;
+    MoistureSensor moistureSensor1;
+    MoistureSensor moistureSensor2;
+    SimplePump pump;
+
+public:
+    WateringMachine(Light &l, SimplePump &sp, MoistureSensor &ms, MoistureSensor &ms2) : light(l), pump(sp), moistureSensor1(ms), moistureSensor2(ms2)
     {
-        this->light = new Light(lightPin);
-        this->moisture[0]= new MoistureSensor(moisturePin1);
-        this->moisture[1]= new MoistureSensor(moisturePin1);
-        this-<pump=new SimplePump
+    }
+    void lightsOn(){
+         this->state.handleLighting();
+    }
+    WateringMachine* setState(WateringMachineStateBase const &wmsb)
+    {
+        this->state = wmsb;
+        return this;
+    }
+    void init(){
+        this->state.init();
+    }
+    void tick(){
+        this->state.tick();
     }
 };
 #endif

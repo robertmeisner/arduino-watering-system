@@ -5,7 +5,7 @@ class StateMachine
 {
   public:
     //initialize the sensor
-    inline virtual void begin(){/*nothing*/};
+    inline virtual void init(){/*nothing*/};
   private:
 
 };

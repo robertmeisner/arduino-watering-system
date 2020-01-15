@@ -1,8 +1,10 @@
 #include "StateMachine.h"
+#ifndef SWITCH_STATE_MACHINE_H
+#define SWITCH_STATE_MACHINE_H
 enum SwitchStates
 {
-  STATE_OFF,
-  STATE_ON
+  SWITCH_OFF,
+  SWITCH_ON
 };
 enum SwitchCommand
 {
@@ -13,7 +15,7 @@ class SwitchStateMachine : public StateMachine
 {
 public:
   SwitchStateMachine() {}
-  SwitchStates state = SwitchStates::STATE_OFF;
+  SwitchStates state = SwitchStates::SWITCH_OFF;
   virtual bool turnOn() = 0;
   virtual bool turnOff() = 0;
   virtual ~SwitchStateMachine() {} // Destructor
@@ -23,15 +25,15 @@ protected:
     switch (command)
     {
     case SwitchCommand::COMMAND_ON:
-      if (this->state == SwitchStates::STATE_OFF)
+      if (this->state == SwitchStates::SWITCH_OFF)
       {
-        this->state = SwitchStates::STATE_ON;
+        this->state = SwitchStates::SWITCH_ON;
       }
       break;
     case SwitchCommand::COMMAND_OFF:
-      if (this->state == SwitchStates::STATE_ON)
+      if (this->state == SwitchStates::SWITCH_ON)
       {
-        this->state = SwitchStates::STATE_OFF;
+        this->state = SwitchStates::SWITCH_OFF;
       }
       break;
 
@@ -41,3 +43,4 @@ protected:
     return this->state;
   }
 };
+#endif

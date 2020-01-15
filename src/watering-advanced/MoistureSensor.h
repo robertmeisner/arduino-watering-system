@@ -3,7 +3,7 @@
   Created by Robert Meisner, November 2, 2007.
   Released into the public domain.
 */
-
+#include "state-machine/StateMachine.h"
 #ifndef MOISTURE_READINGS_COUNT
 #define MOISTURE_READINGS_COUNT 8
 #endif
@@ -21,13 +21,14 @@ enum MoistureSensorCommand
   COMMAND_FINISHED_READ
 };
 
-class MoistureSensor
+class MoistureSensor:StateMachine
 {
 public:
   MoistureSensor(int pin);
 
   int read();
   int readAvg();
+  void init();
   MoistureSensorStates moistureState = MoistureSensorStates::STATE_IDLE;
 
 private:
@@ -37,5 +38,12 @@ private:
   int _moistureReadings[MOISTURE_READINGS_COUNT];
   MoistureSensorStates nextState(MoistureSensorCommand p);
 };
+MoistureSensor::MoistureSensor(int pin) : _pin(pin) {}
+MoistureSensorStates MoistureSensor::nextState(MoistureSensorCommand p)
+{
 
+}
+void MoistureSensor::init(){
+
+}
 #endif
