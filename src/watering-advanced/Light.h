@@ -12,7 +12,7 @@ public:
     Light(int pin);
     bool turnOn();
     bool isOn();
-    int getDurationIsOn();
+    int getDurationSinceLastChange();
     SwitchStates state = SwitchStates::SWITCH_OFF;
 
 private:
@@ -22,17 +22,5 @@ private:
     bool stopTimer();
     SwitchStates nextState(SwitchCommand p);
 };
-Light::Light(int pin):SimpleSwitch(pin){
 
-};
-bool Light::turnOn()
-{
-    if (SimpleSwitch::turnOn())
-    {
-        return this->startTimer();
-    }
-};
-bool Light::startTimer(){
-  
-};
 #endif
