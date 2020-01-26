@@ -4,12 +4,14 @@
 #include <EdgeDebounceLite.h>
 
 
-MechanicalButton::MechanicalButton(int pin, ButtonModes mode) : _pin(pin), buttonMode(mode)
+MechanicalButton::MechanicalButton(int pin, ButtonModes mode/*=ButtonModes::MODE_PULLDOWN*/) : _pin(pin), buttonMode(mode)
 {}
 void MechanicalButton::init()
 {
   pinMode(this->_pin, INPUT);
-  //attachInterrupt(digitalPinToInterrupt(this->_pin), this->buttonInteracted, CHANGE);
+}
+void MechanicalButton::tick(){
+
 }
 void MechanicalButton::setupInterruptHandler(uint8_t irq_pin, void (*ISR)(void), int value)
 {

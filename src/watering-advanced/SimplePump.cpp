@@ -12,6 +12,7 @@ bool SimplePump::start(int speed)
 {
     digitalWrite(this->_pin, LOW);
     this->nextState(PumpCommand::COMMAND_START);
+    this->sinceLastChangeChrono=millis();
     return this->state == PumpStates::STATE_ON;
 }
 
@@ -30,12 +31,13 @@ bool SimplePump::changeSpeed(int speed)
 bool SimplePump::stop()
 {
     digitalWrite(this->_pin, HIGH);
+    this->sinceLastChangeChrono=millis();
     this->nextState(PumpCommand::COMMAND_STOP);
     return true;
 }
-int SimplePump::getTimeRunning()
+unsigned long getDurationSinceLastChange()
 {
-    return 0;
+    return millis()-this->sinceLastChangeChrono;
 }
 PumpStates SimplePump::nextState(PumpCommand command)
 {

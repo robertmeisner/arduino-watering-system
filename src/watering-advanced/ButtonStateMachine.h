@@ -20,10 +20,9 @@ class ButtonStateMachine : public StateMachine
 {
 public:
     ButtonStates state = ButtonStates::STATE_OPEN;
-   
-   ButtonStates getState();
+    ButtonStates getState();
     bool isPressed();
-    virtual ~ButtonStateMachine() {} // Destructor
+    ~ButtonStateMachine() {} // Destructor
 private:
-    virtual bool nextState() = 0;
+    virtual ButtonStates nextState(ButtonCommand p) = 0;
 };

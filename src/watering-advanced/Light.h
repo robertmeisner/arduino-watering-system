@@ -12,15 +12,13 @@ public:
     Light(int pin);
     bool turnOn();
     bool isOn();
-    int getDurationSinceLastChange();
+    unsigned long getDurationSinceLastChange();
     SwitchStates state = SwitchStates::SWITCH_OFF;
 
 private:
     int _pin;
-    unsigned long wateringCycleChrono;
-    bool startTimer();
-    bool stopTimer();
-    SwitchStates nextState(SwitchCommand p);
+    unsigned long sinceLastChangeChrono;
+    bool restartTimer();
 };
 
 #endif

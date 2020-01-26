@@ -16,11 +16,12 @@ public:
   bool start(int speed = 100);
   bool stop();
   bool changeSpeed(int speed);
-  int getTimeRunning();
+  unsigned long getDurationSinceLastChange();
   int speed = 0;
 
 private:
   int _pin;
+  unsigned long sinceLastChangeChrono;
   PumpStates nextState(PumpCommand p);
 };
 

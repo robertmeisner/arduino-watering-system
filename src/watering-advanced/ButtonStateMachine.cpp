@@ -9,6 +9,6 @@ bool ButtonStateMachine::isPressed()
         return true;
     return false;
 }
-bool ButtonStateMachine::nextState(){
+ButtonStates ButtonStateMachine::nextState(ButtonCommand p){
 
 }

@@ -1,28 +1,23 @@
 #include "Light.h"
-
-Light::Light(int pin):SimpleSwitch(pin){
-
-};
+#include "Arduino.h"
+#include "SwitchStateMachine.h"
+Light::Light(int pin) : SimpleSwitch(pin){};
 bool Light::turnOn()
 {
     if (SimpleSwitch::turnOn())
     {
-        return this->startTimer();
+        return this->restartTimer();
     }
 };
- bool Light::isOn(){
-
- }
-bool Light::startTimer(){
-  
+bool Light::isOn()
+{
+    return this->state == SwitchStates::SWITCH_ON;
+}
+bool Light::restartTimer()
+{
+    this->sinceLastChangeChrono = millis();
 };
-int Light::getDurationSinceLastChange(){
-
-}
-
-bool Light::stopTimer(){
-
-}
-SwitchStates Light::nextState(SwitchCommand p){
-
+unsigned long Light::getDurationSinceLastChange()
+{
+    return millis()-this->sinceLastChangeChrono;
 }
