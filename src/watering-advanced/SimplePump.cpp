@@ -1,5 +1,6 @@
 #include "SimplePump.h"
 #include "Arduino.h"
+#include "CustomLog.h"
 // IMPLEMENTATION
 
 SimplePump::SimplePump(int pin, int initialSpeed)
@@ -35,7 +36,7 @@ bool SimplePump::stop()
     this->nextState(PumpCommand::COMMAND_STOP);
     return true;
 }
-unsigned long getDurationSinceLastChange()
+unsigned long SimplePump::getDurationSinceLastChange()
 {
     return millis()-this->sinceLastChangeChrono;
 }

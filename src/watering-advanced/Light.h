@@ -10,6 +10,7 @@ class Light : public SimpleSwitch
 {
 public:
     Light(int pin);
+    void init();
     bool turnOn();
     bool isOn();
     unsigned long getDurationSinceLastChange();

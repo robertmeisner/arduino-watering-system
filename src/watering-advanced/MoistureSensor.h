@@ -4,12 +4,11 @@
   Released into the public domain.
 */
 #include "StateMachine.h"
-#ifndef MOISTURE_READINGS_COUNT
-#define MOISTURE_READINGS_COUNT 8
-#endif
+
 #ifndef MoistureSensor_h
 #define MoistureSensor_h
-
+#define MOISTURE_READINGS_COUNT 8
+#define MOISTURE_SENSORS_COUNT 2
 enum MoistureSensorStates
 {
   STATE_READING,

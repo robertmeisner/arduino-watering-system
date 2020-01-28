@@ -1,9 +1,14 @@
 #include "SimpleSwitch.h"
 #include "Arduino.h"
+#include "CustomLog.h"
 //IMPLEMENTATION 
 SimpleSwitch::SimpleSwitch(int pin):SwitchStateMachine(), _pin(pin)
 {
-  pinMode(pin, OUTPUT);
+  
+}
+void SimpleSwitch::init(){
+  cLog("Initiating SimpleSwitch");
+  pinMode(this->_pin, OUTPUT);
 }
 bool SimpleSwitch::turnOff()
 {

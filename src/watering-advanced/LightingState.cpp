@@ -2,19 +2,24 @@
 #include "WateringMachine.h"
 #include "Light.h"
 #include "SimplePump.h"
-LightingState::LightingState(WateringMachine& wm): WateringMachineStateBase(wm){
-
+#include "CustomLog.h"
+#include "StateFactory.h"
+//LightingState::LightingState(WateringMachine* wm): WateringMachineStateBase(wm){}
+char *LightingState::getName()
+{
+    return "LightingState";
 }
 bool LightingState::handleWatering()
 {
+    cLog("Watering handled by");
+    cLog(this->getName());
+    this->context->light.turnOff();
 
-    this->context.light.turnOff();
-
-    if (!this->context.light.isOn())
+    if (!this->context->light.isOn())
     {
-        if (this->context.pump.start())
+        if (this->context->pump.start())
         {
-            // this->context.setState(WateringState(this->context));
+            this->context->setState(StateType::WATERING_STATE);
             return true;
         }
     }
@@ -22,9 +27,13 @@ bool LightingState::handleWatering()
 }
 bool LightingState::handleLighting()
 {
+    cLog("Lighting handled by");
+    cLog(this->getName());
     return false;
 }
 bool LightingState::handleMoistureReading(){};
-bool LightingState::init(){};
+bool LightingState::init(){
+    this->context->light.turnOn();
+};
 bool LightingState::tick(){};
 bool LightingState::setContext(){};

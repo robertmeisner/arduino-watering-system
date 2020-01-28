@@ -5,14 +5,16 @@ class WateringMachine;
 class LightingState : public WateringMachineStateBase
 {
 public:
-    LightingState(WateringMachine& wm);
+    using WateringMachineStateBase::WateringMachineStateBase;
+    char* getName();
     bool handleWatering();
     bool handleLighting();
     bool handleMoistureReading();
     bool init();
     bool tick();
     bool setContext();
-
+//LightingState(WateringMachine* wm);
+    
 protected:
 };
 

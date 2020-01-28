@@ -5,9 +5,10 @@
 //#include "../WateringMachine.h"
 class WateringState : public WateringMachineStateBase
 {
-
 public:
    // WateringState(WateringMachine wm) : context(wm) {}
+   using WateringMachineStateBase::WateringMachineStateBase;
+    char* getName();
     bool handleWatering() ;
     bool handleLighting() ;
     bool handleMoistureReading() ;

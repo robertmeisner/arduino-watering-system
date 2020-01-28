@@ -1,5 +1,6 @@
 #include "MoistureSensor.h"
 #include "Arduino.h"
+#include "CustomLog.h" 
 MoistureSensor::MoistureSensor(int pin)
 {
   //set all values to full wet
@@ -66,5 +67,5 @@ MoistureSensorStates MoistureSensor::nextState(MoistureSensorCommand command)
 }
 
 void MoistureSensor::init(){
-
+  cLog("Initiating Moisture Sensor");
 }

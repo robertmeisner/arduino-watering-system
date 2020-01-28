@@ -1,7 +1,13 @@
 #include "Light.h"
 #include "Arduino.h"
 #include "SwitchStateMachine.h"
+#include "CustomLog.h"
 Light::Light(int pin) : SimpleSwitch(pin){};
+void Light::init()
+{
+    cLog("Initiating Light");
+    SimpleSwitch::init();
+}
 bool Light::turnOn()
 {
     if (SimpleSwitch::turnOn())
@@ -19,5 +25,5 @@ bool Light::restartTimer()
 };
 unsigned long Light::getDurationSinceLastChange()
 {
-    return millis()-this->sinceLastChangeChrono;
+    return millis() - this->sinceLastChangeChrono;
 }

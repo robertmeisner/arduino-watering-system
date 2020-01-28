@@ -6,7 +6,9 @@ class WateringMachine;
 class StateFactory
 {
 public:
-    WateringMachineStateBase* getState(StateType type,WateringMachine &m);
+    StateFactory();
+    WateringMachineStateBase* getState(StateType type);
+    WateringMachineStateBase* getState(StateType type,WateringMachine *m);
 };
 
 #endif

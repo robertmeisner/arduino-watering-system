@@ -11,36 +11,34 @@
 #include "IdleState.h"
 #include "WateringState.h"
 
-
-
 #include "StateFactory.h"
 
-SimplePump pump(12, 0);
-Light light(12);
-MoistureSensor moistureSensor1(12);
-MoistureSensor moistureSensor2(12);
-
-MechanicalButton *mb=new MechanicalButton(12);
+MechanicalButton *mb = new MechanicalButton(12);
 // calling global variables in global scope is not permitted oO //cry
 void mbInterruptHandler(void)
 {
- // xc->handleInterrupt();
+    // xc->handleInterrupt();
 }
 
-
-WateringMachine wateringMachine(light, pump, moistureSensor1, moistureSensor2);
+WateringMachine *wateringMachine;
 
 void setup()
 {
- 
-    Serial.begin(9600); 
 
-    mb->setupInterruptHandler(12, mbInterruptHandler,CHANGE);
-    StateFactory *sf=new StateFactory();
-    wateringMachine.setState(sf->getState(StateType::IDLE_STATE,wateringMachine) ); //rewrite
-    wateringMachine.init();
+    Serial.begin(9600);
+    StateFactory sf; //tak sie tworzy obiekty bez parametrow?!?!?!?!
+    SimplePump pump(12, 0);
+    Light light(12);
+    std::vector<MoistureSensor> sensors;
+    sensors.push_back(MoistureSensor(12));
+    sensors.push_back(MoistureSensor(12));
+    mb->setupInterruptHandler(12, mbInterruptHandler, CHANGE);
+
+    wateringMachine = new WateringMachine(sf, light, pump, sensors);
+
+    wateringMachine->init();
 };
 void loop()
 {
-    wateringMachine.tick();
+    wateringMachine->tick();
 };

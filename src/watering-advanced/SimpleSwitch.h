@@ -7,19 +7,16 @@
 #include "SwitchStateMachine.h"
 #define SimpleSwitch_h
 
-
 class SimpleSwitch : public SwitchStateMachine
 {
 public:
   SimpleSwitch(int pin);
-
+  void init();
   bool turnOn();
   bool turnOff();
 
 private:
   int _pin;
 };
-
-
 
 #endif

@@ -5,17 +5,20 @@ class WateringMachine;
 class WateringMachineStateBase
 {
 public:
-    WateringMachineStateBase(WateringMachine& wm);
+    WateringMachineStateBase();
+    WateringMachineStateBase(WateringMachine *context);
     // Class destructor for WateringMachineStateBase (Declared as virtual)
      ~WateringMachineStateBase() {}
+     //maybe do it pure virtual?
+    virtual char* getName(); ;
     virtual bool handleWatering() ;
     virtual bool handleLighting() ;
     virtual bool handleMoistureReading() ;
     virtual bool init() ;
     virtual bool tick() ;
-    virtual bool setContext() ;
+    virtual bool setContext(WateringMachine *context) ;
 
 protected:
-  WateringMachine &context;
+  WateringMachine *context;
 };
 #endif
