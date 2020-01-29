@@ -35,5 +35,9 @@ bool LightingState::handleMoistureReading(){};
 bool LightingState::init(){
     this->context->light.turnOn();
 };
-bool LightingState::tick(){};
+bool LightingState::tick(){
+    if(this->context->light.getDurationSinceLastChange()>){
+        
+    }
+};
 bool LightingState::setContext(){};
