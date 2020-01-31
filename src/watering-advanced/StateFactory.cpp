@@ -3,29 +3,35 @@
 #include "WateringState.h"
 #include "IdleState.h"
 class WateringMachine;
-StateFactory::StateFactory(){}
-WateringMachineStateBase* StateFactory::getState(StateType type, WateringMachine *m)
+StateFactory::StateFactory() {}
+WateringMachineStateBase *StateFactory::getState(StateType type, WateringMachine *m)
 {
 
     switch (type)
     {
     case StateType::WATERING_STATE:
     {
-        WateringMachineStateBase* l= new WateringState(m);
-        return l;
+        WateringMachineStateBase *a = new WateringState(m);
+        return a;
         break;
-}
+    }
     case StateType::LIGHTING_STATE:
-        WateringMachineStateBase* l= new LightingState(m);
-        return l;
+    {
+        WateringMachineStateBase *b = new LightingState(m);
+        return b;
         break;
+    }
 
     case StateType::IDLE_STATE:
-        WateringMachineStateBase* l= new IdleState(m);
-        return l;
+    {
+        WateringMachineStateBase *c = new IdleState(m);
+        return c;
         break;
+    }
 
     default:
+    {
         break;
+    }
     }
 }

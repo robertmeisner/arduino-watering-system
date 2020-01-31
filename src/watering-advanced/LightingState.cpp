@@ -36,7 +36,7 @@ bool LightingState::init(){
     this->context->light.turnOn();
 };
 bool LightingState::tick(){
-    if(this->context->light.getDurationSinceLastChange()>){
+    if(this->context->light.getDurationSinceLastChange()){
         
     }
 };
