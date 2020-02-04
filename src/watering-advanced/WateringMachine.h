@@ -4,12 +4,13 @@
 //#include "state-pattern/WateringMachineStateBase.h"
 #include<vector>
 #define WateringMachine_h
-
+#include "StateTypeEnum.h"
 class WateringMachineStateBase;
 class Light;
 class MoistureSensor;
 class SimplePump;
 class StateFactory;
+
 
 class WateringMachine
 {
@@ -18,7 +19,8 @@ public:
    void lightsOn();
     void init();
     void tick();
-    WateringMachine *setState( WateringMachineStateBase *wmsb);
+    int getMoistureAvg();
+    WateringMachine *setState( StateType type);
     WateringMachineStateBase *state;
     Light &light;
     std::vector<MoistureSensor> &moistureSensors;

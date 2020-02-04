@@ -5,15 +5,16 @@
 class IdleState : public WateringMachineStateBase
 {
 public:
-   //IdleState(WateringMachine wm) : context(wm) {}
-   using WateringMachineStateBase::WateringMachineStateBase;
-    char* getName();
-    bool handleWatering() ;
-    bool handleLighting() ;
-    bool handleMoistureReading() ;
-    bool init() ;
-    bool tick() ;
-    bool setContext() ;
+    //IdleState(WateringMachine wm) : context(wm) {}
+    using WateringMachineStateBase::WateringMachineStateBase;
+    char *getName();
+    bool handleWatering();
+    bool handleLighting();
+    bool handleMoistureReading();
+    bool handleIdle();
+    bool init();
+    bool tick();
+    bool setContext();
 
 protected:
     //WateringMachine context;

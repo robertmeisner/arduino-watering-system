@@ -14,6 +14,7 @@ public:
     virtual bool handleWatering() ;
     virtual bool handleLighting() ;
     virtual bool handleMoistureReading() ;
+    virtual bool handleIdle() ;
     virtual bool init() ;
     virtual bool tick() ;
     virtual bool setContext(WateringMachine *context) ;
