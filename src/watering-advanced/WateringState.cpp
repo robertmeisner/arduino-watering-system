@@ -3,7 +3,8 @@
 #include "SimplePump.h"
 #include "Light.h"
 #include "CustomLog.h"
-char* WateringState::getName(){
+char *WateringState::getName()
+{
     return "WateringState";
 }
 bool WateringState::handleLighting()
@@ -12,27 +13,46 @@ bool WateringState::handleLighting()
     {
         if (this->context->light.turnOn())
         {
+            cLog("Changing state from WateringState to LightingState");
             this->context->setState(StateType::LIGHTING_STATE);
             return true;
         }
     }
     return false;
 };
-bool WateringState::handleWatering() {
+bool WateringState::handleWatering()
+{
     //do nothing?
-    cLog("Watering can't be handled when watering",DebugLevel::WARNING);
+    cLog("Watering can't be handled when watering", DebugLevel::WARNING);
 }
-bool WateringState::handleMoistureReading() {
-    //read avg for all sensors
-    int sensorsAvg=this->context->readSensors();
+
+bool WateringState::handleIdle()
+{
+
+    if (this->context->light.turnOff())
+    {
+        cLog("Changing state from WateringState to IdleState");
+        this->context->setState(StateType::IDLE_STATE);
+        return true;
+    }
 }
-bool IdleState::handleIdle() {}
-bool WateringState::init() {}
-bool WateringState::tick() {
-    // if last time checked is 2 min ago or more 
-    // read moisture 
-    this->handleMoistureReading();
+bool WateringState::init() {
+    cLog("Initiating the WateringState");
+    if(!this->context->pump.start()){
+        this->handleIdle();
+    }
+}
+bool WateringState::tick()
+{
+    // if last time checked is 2 min ago or more
+    // read moisture
+    int sensorsAvg = this->context->getMoistureAvg();
     //if avg moisture is higher than XXX stop Watering
-    this
+    if (sensorsAvg > this->context->config['MOISTURE_TRESHOLD'])
+    {
+        cLog("Stopping Watering");
+        this->handleIdle();
+    }
+    
 }
 bool WateringState::setContext() {}

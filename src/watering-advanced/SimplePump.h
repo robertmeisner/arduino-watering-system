@@ -18,6 +18,7 @@ public:
   bool changeSpeed(int speed);
   unsigned long getDurationSinceLastChange();
   int speed = 0;
+  void init();
 
 private:
   int _pin;

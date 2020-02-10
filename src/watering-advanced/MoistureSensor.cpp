@@ -35,6 +35,7 @@ int MoistureSensor::read()
 
 int MoistureSensor::readAvg()
 {
+  cLog("Reading the sensor average");
   int avg = 0;
   for (byte j = 0; j < MOISTURE_READINGS_COUNT; j++)
   {

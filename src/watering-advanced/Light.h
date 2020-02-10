@@ -12,6 +12,7 @@ public:
     Light(int pin);
     void init();
     bool turnOn();
+    bool turnOff();
     bool isOn();
     unsigned long getDurationSinceLastChange();
     SwitchStates state = SwitchStates::SWITCH_OFF;

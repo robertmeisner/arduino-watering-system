@@ -11,14 +11,13 @@ char *LightingState::getName()
 }
 bool LightingState::handleWatering()
 {
-    cLog("Watering handled by");
-    cLog(this->getName());
     this->context->light.turnOff();
 
     if (!this->context->light.isOn())
     {
         if (this->context->pump.start())
         {
+            cLog("Changing state from LightingState to WateringState");
             this->context->setState(StateType::WATERING_STATE);
             return true;
         }
@@ -27,17 +26,29 @@ bool LightingState::handleWatering()
 }
 bool LightingState::handleLighting()
 {
-    cLog("Lighting handled by");
-    cLog(this->getName());
+    cLog("Lighting can't be handled when lighting", DebugLevel::WARNING);
     return false;
 }
-bool LightingState::handleMoistureReading(){};
-bool LightingState::init(){
+bool LightingState::handleIdle()
+{
+    this->context->light.turnOff();
+    if (!this->context->light.isOn())
+    {
+        cLog("Changing state from LightingState to IdleState");
+        this->context->setState(StateType::IDLE_STATE);
+        return true;
+    }
+    return false;
+};
+bool LightingState::init()
+{
     this->context->light.turnOn();
 };
-bool LightingState::tick(){
-    if(this->context->light.getDurationSinceLastChange()){
-        
+bool LightingState::tick()
+{
+    
+    if (this->context->light.getDurationSinceLastChange())
+    {
     }
 };
 bool LightingState::setContext(){};

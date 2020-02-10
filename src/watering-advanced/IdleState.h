@@ -10,7 +10,6 @@ public:
     char *getName();
     bool handleWatering();
     bool handleLighting();
-    bool handleMoistureReading();
     bool handleIdle();
     bool init();
     bool tick();

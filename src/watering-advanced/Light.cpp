@@ -15,12 +15,21 @@ bool Light::turnOn()
         return this->restartTimer();
     }
 };
+bool Light::turnOff()
+{
+     cLog("Turning off the Light");
+    if (SimpleSwitch::turnOff())
+    {
+        return this->restartTimer();
+    }
+};
 bool Light::isOn()
 {
     return this->state == SwitchStates::SWITCH_ON;
 }
 bool Light::restartTimer()
 {
+    cLog("Restarting the time");
     this->sinceLastChangeChrono = millis();
 };
 unsigned long Light::getDurationSinceLastChange()

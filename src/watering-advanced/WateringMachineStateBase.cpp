@@ -4,7 +4,6 @@ WateringMachineStateBase::WateringMachineStateBase( WateringMachine* wm) : conte
 char* WateringMachineStateBase::getName( ) {}
 bool WateringMachineStateBase::handleWatering(){};
 bool WateringMachineStateBase::handleLighting(){};
-bool WateringMachineStateBase::handleMoistureReading(){};
 bool WateringMachineStateBase::handleIdle(){};
 bool WateringMachineStateBase::init(){};
 bool WateringMachineStateBase::tick(){};

@@ -6,11 +6,10 @@
 #include "SimplePump.h"
 #include "IdleState.h"
 #include "StateFactory.h"
+#include <ArduinoJson.h>
 
-WateringMachine::WateringMachine(StateFactory &sf, Light &l, SimplePump &sp, std::vector<MoistureSensor> &ms) : stateFactory(sf), light(l), pump(sp), moistureSensors(ms)
+WateringMachine::WateringMachine( JsonDocument& _doc,StateFactory &sf, Light &l, SimplePump &sp, std::vector<MoistureSensor> &ms) : stateFactory(sf), light(l), pump(sp), moistureSensors(ms),config(_doc)
 {
-    this->setState(StateType::IDLE_STATE);
-    //this->setState()
     //this->state->setContext(this);
 }
 void WateringMachine::lightsOn()
@@ -19,27 +18,37 @@ void WateringMachine::lightsOn()
 }
 WateringMachine *WateringMachine::setState(StateType type)
 {
+    
     this->state = this->stateFactory.getState(type, this);
+    this->state->init();
     return this;
 }
 
 int WateringMachine::getMoistureAvg()
 {
-     for (std::vector<MoistureSensor>::iterator it = this->moistureSensors.begin(); it != this->moistureSensors.end(); ++it)
+    if (this->moistureSensors.size() == 0)
     {
-        it->init();
+        cLog("No Moisture Sensors detetected.", DebugLevel::FATAL);
+        return 100;
     }
+    int avg = 0;
+    for (std::vector<MoistureSensor>::iterator it = this->moistureSensors.begin(); it != this->moistureSensors.end(); ++it)
+    {
+        avg += it->readAvg();
+    }
+    return avg / this->moistureSensors.size();
 }
 void WateringMachine::init()
 {
+    // inititate the components
     this->light.init();
     for (std::vector<MoistureSensor>::iterator it = this->moistureSensors.begin(); it != this->moistureSensors.end(); ++it)
     {
         it->init();
     }
     this->pump.init();
-    //remove?
-    this->state->init();
+    //set initital state
+    this->setState(StateType::IDLE_STATE);
 }
 void WateringMachine::tick()
 {
