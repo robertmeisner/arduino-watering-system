@@ -17,14 +17,13 @@ public:
   bool stop();
   bool changeSpeed(int speed);
   unsigned long getDurationSinceLastChange();
-  int speed = 0;
+
   void init();
 
 private:
   int _pin;
+  int _speed = 0;
   unsigned long sinceLastChangeChrono;
-  PumpStates nextState(PumpCommand p);
 };
-
 
 #endif

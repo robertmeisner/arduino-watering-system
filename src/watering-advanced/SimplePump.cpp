@@ -6,10 +6,12 @@
 SimplePump::SimplePump(int pin, int initialSpeed)
 {
     this->_pin = pin;
-    this->speed = initialSpeed;
+    this->_speed = initialSpeed;
 }
 bool SimplePump::start(int speed)
 {
+    cLog("Starting the pump");
+
     digitalWrite(this->_pin, LOW);
     this->nextState(PumpCommand::COMMAND_START);
     this->sinceLastChangeChrono = millis();
@@ -18,7 +20,7 @@ bool SimplePump::start(int speed)
 
 bool SimplePump::changeSpeed(int speed)
 {
-    this->speed = speed;
+    this->_speed = speed;
     if (this->state == PumpStates::STATE_ON && speed == 0)
     {
         return this->stop();
@@ -39,31 +41,9 @@ unsigned long SimplePump::getDurationSinceLastChange()
 {
     return millis() - this->sinceLastChangeChrono;
 }
-PumpStates SimplePump::nextState(PumpCommand command)
-{
-    switch (this->state)
-    {
-    case PumpStates::STATE_ON:
-        if (command == PumpCommand::COMMAND_STOP)
-        {
-            this->state = PumpStates::STATE_OFF;
-        };
-        break;
-    case PumpStates::STATE_OFF:
-        if (command == PumpCommand::COMMAND_START)
-        {
-            this->state = PumpStates::STATE_ON;
-        };
-        break;
 
-    default:
-        break;
-    }
-    return this->state;
-}
 void SimplePump::init()
 {
     cLog("Initiating SimplePump");
     pinMode(this->_pin, OUTPUT);
-    this->start(this->speed);
 }

@@ -15,7 +15,6 @@ public:
     bool handleIdle();
     bool init();
     bool tick();
-    bool setContext();
 
 protected:
     int sensorsAverage = 100;

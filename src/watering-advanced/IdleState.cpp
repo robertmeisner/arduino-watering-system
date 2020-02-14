@@ -25,7 +25,7 @@ bool IdleState::tick()
 
     if (sensorsAvg < this->context->config['MOISTURE_TRESHOLD'])
     {
-        cLog("Moisture over the treshold");
+        cLog("Moisture under MOISTURE_TRESHOLD");
         this->handleWatering();
     }
     if (this->context->light.getDurationSinceLastChange() > this->context->config['LIGHT_INTERVAL'])
@@ -34,4 +34,3 @@ bool IdleState::tick()
         this->handleLighting();
     }
 }
-bool IdleState::setContext() {}

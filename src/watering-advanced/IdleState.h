@@ -13,7 +13,6 @@ public:
     bool handleIdle();
     bool init();
     bool tick();
-    bool setContext();
 
 protected:
     //WateringMachine context;

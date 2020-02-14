@@ -28,3 +28,12 @@ void cLog(char *message, DebugLevel v /*=DebugLevel::INFO*/)
     Serial.println(str);
     
 }
+void cLog(String message,  DebugLevel v /*=DebugLevel::INFO*/)
+{
+    String str = "";
+    str += DebugLevelToString(v);
+    str += " - ";
+    str += message;
+    Serial.println(str);
+    
+}

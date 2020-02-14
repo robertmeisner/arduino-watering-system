@@ -36,23 +36,31 @@ bool WateringState::handleIdle()
         return true;
     }
 }
-bool WateringState::init() {
+bool WateringState::init()
+{
     cLog("Initiating the WateringState");
-    if(!this->context->pump.start()){
+    if (this->context->pump.start())
+    {
+       cLog("Couldn't start the pump.");
         this->handleIdle();
     }
+    cLog("Initiating of the WateringState has finished");
 }
 bool WateringState::tick()
 {
+    cLog("Watering State tick started", DebugLevel::DEBUG);
     // if last time checked is 2 min ago or more
     // read moisture
+
     int sensorsAvg = this->context->getMoistureAvg();
     //if avg moisture is higher than XXX stop Watering
     if (sensorsAvg > this->context->config['MOISTURE_TRESHOLD'])
     {
+        cLog(String("Moisture sensor is over MOISTURE_TRESHOLD: ") + String(sensorsAvg) +">" , DebugLevel::DEBUG);
+        //cLog( (this->context->config['MOISTURE_TRESHOLD']);
         cLog("Stopping Watering");
-        this->handleIdle();
+        //    this->handleIdle();
     }
-    
+    cLog(String("Moisture sensor is below MOISTURE_TRESHOLD: ") + sensorsAvg + String("<") + this->context->config['MOISTURE_TRESHOLD'], DebugLevel::DEBUG);
+    cLog("Watering State tick finished", DebugLevel::DEBUG);
 }
-bool WateringState::setContext() {}

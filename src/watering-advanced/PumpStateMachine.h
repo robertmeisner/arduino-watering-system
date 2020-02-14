@@ -14,11 +14,11 @@ class PumpStateMachine : public StateMachine
 {
 public:
     PumpStates state = PumpStates::STATE_OFF;
-    virtual ~PumpStateMachine() {} // Destructor
-    virtual bool start(int speed) = 0;
-    virtual bool changeSpeed(int speed) = 0;
-    virtual bool stop() = 0;
+     ~PumpStateMachine() {} // Destructor
+     bool start(int speed) {};
+     bool changeSpeed(int speed) {};
+     bool stop()  {};
 
-private:
-    virtual PumpStates nextState(PumpCommand command) = 0; // Needs to be implemented by each subclass
+protected:
+     PumpStates nextState(PumpCommand command); // Needs to be implemented by each subclass
 };

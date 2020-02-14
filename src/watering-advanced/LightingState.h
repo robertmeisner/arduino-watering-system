@@ -12,7 +12,6 @@ public:
     bool handleIdle();
     bool init();
     bool tick();
-    bool setContext();
     //LightingState(WateringMachine* wm);
 
 protected:

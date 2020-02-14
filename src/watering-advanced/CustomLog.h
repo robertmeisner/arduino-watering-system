@@ -14,4 +14,5 @@ enum DebugLevel
 };
 inline const char *DebugLevelToString(DebugLevel v);
 void cLog(char *message, DebugLevel v=DebugLevel::INFO);
+void cLog(String message, DebugLevel v=DebugLevel::INFO);
 #endif

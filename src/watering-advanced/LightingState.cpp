@@ -51,4 +51,3 @@ bool LightingState::tick()
     {
     }
 };
-bool LightingState::setContext(){};
