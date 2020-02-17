@@ -1,4 +1,5 @@
 #include "WateringMachine.h"
+#include "WateringMachineConfig.h"
 #include "WateringMachineStateBase.h"
 #include "CustomLog.h"
 #include "Light.h"
@@ -6,9 +7,8 @@
 #include "SimplePump.h"
 #include "IdleState.h"
 #include "StateFactory.h"
-#include <ArduinoJson.h>
 
-WateringMachine::WateringMachine(JsonDocument &_doc, StateFactory &sf, Light &l, SimplePump &sp, std::vector<MoistureSensor> &ms) : config(_doc),stateFactory(sf), light(l), pump(sp), moistureSensors(ms)
+WateringMachine::WateringMachine(WateringMachineConfig &_doc, StateFactory &sf, Light &l, SimplePump &sp, std::vector<MoistureSensor> &ms) : config(_doc),stateFactory(sf), light(l), pump(sp), moistureSensors(ms)
 {
     //this->state->setContext(this);
 }
