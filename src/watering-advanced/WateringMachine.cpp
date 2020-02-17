@@ -8,7 +8,7 @@
 #include "IdleState.h"
 #include "StateFactory.h"
 
-WateringMachine::WateringMachine(WateringMachineConfig &_doc, StateFactory &sf, Light &l, SimplePump &sp, std::vector<MoistureSensor> &ms) : config(_doc),stateFactory(sf), light(l), pump(sp), moistureSensors(ms)
+WateringMachine::WateringMachine(WateringMachineConfig &doc, StateFactory &sf, Light &l, SimplePump &sp, std::vector<MoistureSensor> &ms) : config(doc),stateFactory(sf), light(l), pump(sp), moistureSensors(ms)
 {
     //this->state->setContext(this);
 }

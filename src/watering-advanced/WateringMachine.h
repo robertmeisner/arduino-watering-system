@@ -10,6 +10,7 @@
 
 class WateringMachineStateBase;
 class Light;
+struct WateringMachineConfig;
 class MoistureSensor;
 class SimplePump;
 class StateFactory;
@@ -18,7 +19,7 @@ class StateFactory;
 class WateringMachine
 {
 public:
-    WateringMachine( WateringMachineConfig& _doc,StateFactory &sf,Light &l, SimplePump &sp,  std::vector<MoistureSensor> &moistureSensors);
+    WateringMachine( WateringMachineConfig &doc,StateFactory &sf,Light &l, SimplePump &sp,  std::vector<MoistureSensor> &moistureSensors);
    void lightsOn();
     void init();
     void tick();

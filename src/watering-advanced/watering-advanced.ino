@@ -1,11 +1,11 @@
 #include "Arduino.h"
-#include "ArduinoJson.h"
 #include "SimplePump.h"
 #include "Light.h"
 #include "MoistureSensor.h"
 #include "MechanicalButton.h"
 #include "CustomLog.h"
 #include "WateringMachine.h"
+#include "WateringMachineConfig.h"
 
 #include "WateringMachineStateBase.h"
 #include "LightingState.h"
@@ -15,6 +15,8 @@
 #include "StateFactory.h"
 
 //MechanicalButton *mb = new MechanicalButton(12);
+//ALWAYS USE h and cpp files!!!!! laways h only declrations and cpp for definiton
+//always use ifnotdef def
 // calling global variables in global scope is not permitted oO //cry
 //https://community.blynk.cc/t/error-isr-not-in-iram/37426/16
 //ICACHE_RAM_ATTR void mbInterruptHandler(void)
@@ -22,6 +24,7 @@
 // xc->handleInterrupt();
 //}
 #define WATERING_TEST
+WateringMachineConfig config;
 WateringMachine *wateringMachine;
 
 void setup()
@@ -29,7 +32,7 @@ void setup()
     // initialize the serial communication:
     Serial.begin(115200);
     cLog("Setting up the Watering Machine");
-    StaticJsonDocument<500> doc;
+   // StaticJsonDocument<500> doc;
     /*
       #define LIGHT_DURATION 3600000  //1h in ms
       #define LIGHT_INTERVAL 86400000 //24h in ms
@@ -40,23 +43,19 @@ void setup()
       */
     char json[] =
         "{\"sensor\":\"gps\",\"LIGHTING_INTERVAL\":82800000,\"LIGHTING_DURATION\":3600000,\"WATERING_MAX_DURATION\":1000,\"MOISTURE_TRESHOLD\":34,\"data\":[48.756080,2.302038]}";
-    cLog("Deserializing Config");
-    cLog(json);
+    //cLog("Deserializing Config");
+    //cLog(json);
     // Deserialize the JSON document
-    DeserializationError error = deserializeJson(doc, json);
+    //DeserializationError error = deserializeJson(doc, json);
 
     // Test if parsing succeeds.
-    if (error)
+    /*if (error)
     {
         Serial.print(F("deserializeJson() failed: "));
         Serial.println(error.c_str());
         return;
-    }
-    const char *sensor = doc["sensor"];
-    long time = doc["time"];
-    double latitude = doc["data"][0];
-    double longitude = doc["data"][1];
-
+    }*/
+    loadWateringConfig(json,config);
     StateFactory sf; //tak sie tworzy obiekty bez parametrow?!?!?!?!
     SimplePump pump(4, 0);
     Light light(5);
@@ -65,7 +64,7 @@ void setup()
     sensors.push_back(MoistureSensor(7));
     //mb->setupInterruptHandler(12, mbInterruptHandler, CHANGE);
 
-    wateringMachine = new WateringMachine(doc, sf, light, pump, sensors);
+    wateringMachine = new WateringMachine(config, sf, light, pump, sensors);
     wateringMachine->init();
     cLog("Setting up has finished");
 };
