@@ -5,7 +5,7 @@
 #include "CustomLog.h"
 #include "StateFactory.h"
 //LightingState::LightingState(WateringMachine* wm): WateringMachineStateBase(wm){}
-char *LightingState::getName()
+const char *LightingState::getName()
 {
     return "LightingState";
 }

@@ -6,7 +6,7 @@ class LightingState : public WateringMachineStateBase
 {
 public:
     using WateringMachineStateBase::WateringMachineStateBase;
-    char *getName();
+    const char *getName();
     bool handleWatering();
     bool handleLighting();
     bool handleIdle();

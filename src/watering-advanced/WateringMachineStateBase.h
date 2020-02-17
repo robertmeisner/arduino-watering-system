@@ -10,7 +10,7 @@ public:
     // Class destructor for WateringMachineStateBase (Declared as virtual)
      ~WateringMachineStateBase() {}
      //maybe do it pure virtual?
-    virtual char* getName(); ;
+    virtual const char* getName(); ;
     virtual bool handleWatering() ;
     virtual bool handleLighting() ;
     virtual bool handleIdle() ;

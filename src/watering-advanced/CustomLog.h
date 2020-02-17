@@ -13,6 +13,7 @@ enum DebugLevel
     OFF
 };
 inline const char *DebugLevelToString(DebugLevel v);
-void cLog(char *message, DebugLevel v=DebugLevel::INFO);
-void cLog(String message, DebugLevel v=DebugLevel::INFO);
+void cLog(const char *message, DebugLevel v=DebugLevel::INFO);
+void cLog(const String message, DebugLevel v=DebugLevel::INFO);
+void cLog(const std::string& message, DebugLevel v=DebugLevel::INFO);
 #endif

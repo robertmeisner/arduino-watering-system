@@ -1,7 +1,7 @@
 #include "WateringMachineStateBase.h"
 WateringMachineStateBase::WateringMachineStateBase( ) {}
 WateringMachineStateBase::WateringMachineStateBase( WateringMachine* wm) : context(wm){}
-char* WateringMachineStateBase::getName( ) {}
+const char* WateringMachineStateBase::getName( ) {}
 bool WateringMachineStateBase::handleWatering(){};
 bool WateringMachineStateBase::handleLighting(){};
 bool WateringMachineStateBase::handleIdle(){};

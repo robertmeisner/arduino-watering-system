@@ -7,7 +7,7 @@ class IdleState : public WateringMachineStateBase
 public:
     //IdleState(WateringMachine wm) : context(wm) {}
     using WateringMachineStateBase::WateringMachineStateBase;
-    char *getName();
+    const char *getName();
     bool handleWatering();
     bool handleLighting();
     bool handleIdle();

@@ -1,6 +1,6 @@
 #include "MoistureSensor.h"
 #include "Arduino.h"
-#include "CustomLog.h" 
+#include "CustomLog.h"
 MoistureSensor::MoistureSensor(int pin)
 {
   //set all values to full wet
@@ -15,11 +15,16 @@ int MoistureSensor::read()
 {
   if (this->nextState(MoistureSensorCommand::COMMAND_READ) == MoistureSensorStates::STATE_READING)
   {
+#ifndef WATERING_TEST
     this->_moistureReadingNumber++;
 
     int value = analogRead(this->_pin);  // Read analog value
     value = constrain(value, 400, 1023); // Keep the ranges!
     value = map(value, 400, 1023, 100, 0);
+#else
+    srand(time(0));
+    int value = random(0, 99);
+#endif
     this->_moistureReadings[this->_moistureReadingNumber - 1] = value;
 
     if (this->_moistureReadingNumber > 7)
@@ -67,6 +72,7 @@ MoistureSensorStates MoistureSensor::nextState(MoistureSensorCommand command)
   return this->state;
 }
 
-void MoistureSensor::init(){
+void MoistureSensor::init()
+{
   cLog("Initiating Moisture Sensor");
 }

@@ -8,7 +8,7 @@ class WateringState : public WateringMachineStateBase
 public:
     // WateringState(WateringMachine wm) : context(wm) {}
     using WateringMachineStateBase::WateringMachineStateBase;
-    char *getName();
+    const char *getName();
     bool handleWatering();
     bool handleLighting();
     bool handleMoistureReading();
@@ -19,4 +19,4 @@ public:
 protected:
     int sensorsAverage = 100;
 };
-#endif;
+#endif

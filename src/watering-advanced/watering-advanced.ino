@@ -7,7 +7,7 @@
 #include "CustomLog.h"
 #include "WateringMachine.h"
 
-#include "WateringMachineStateBase.h";
+#include "WateringMachineStateBase.h"
 #include "LightingState.h"
 #include "IdleState.h"
 #include "WateringState.h"
@@ -21,7 +21,7 @@
 //{
 // xc->handleInterrupt();
 //}
-
+#define WATERING_TEST
 WateringMachine *wateringMachine;
 
 void setup()
@@ -66,7 +66,6 @@ void setup()
     //mb->setupInterruptHandler(12, mbInterruptHandler, CHANGE);
 
     wateringMachine = new WateringMachine(doc, sf, light, pump, sensors);
-
     wateringMachine->init();
     cLog("Setting up has finished");
 };

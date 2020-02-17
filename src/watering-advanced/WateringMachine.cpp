@@ -8,7 +8,7 @@
 #include "StateFactory.h"
 #include <ArduinoJson.h>
 
-WateringMachine::WateringMachine(JsonDocument &_doc, StateFactory &sf, Light &l, SimplePump &sp, std::vector<MoistureSensor> &ms) : stateFactory(sf), light(l), pump(sp), moistureSensors(ms), config(_doc)
+WateringMachine::WateringMachine(JsonDocument &_doc, StateFactory &sf, Light &l, SimplePump &sp, std::vector<MoistureSensor> &ms) : config(_doc),stateFactory(sf), light(l), pump(sp), moistureSensors(ms)
 {
     //this->state->setContext(this);
 }
@@ -29,7 +29,7 @@ int WateringMachine::getMoistureAvg()
     cLog(String("Trying to obtain Moisture Sensors read outs"));
     if (this->moistureSensors.size() == 0)
     {
-        cLog("No Moisture Sensors detetected.", DebugLevel::FATAL);
+        cLog("No Moisture Sensors detected.", DebugLevel::FATAL);
         return 100;
     }
     int avg = 0;
@@ -37,7 +37,7 @@ int WateringMachine::getMoistureAvg()
     {
         //avg += it->readAvg();
     }
-    cLog(String("Moisture sensor reads: ") + avg);
+    cLog(String("Average for all Moisture sensors reads: ") + (avg / this->moistureSensors.size()));
     return avg / this->moistureSensors.size();
 }
 void WateringMachine::init()

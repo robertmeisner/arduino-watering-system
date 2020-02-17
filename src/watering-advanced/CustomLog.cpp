@@ -19,7 +19,7 @@ inline const char *DebugLevelToString(DebugLevel v)
         return "[Unknown DebugLevel]";
     }
 }
-void cLog(char *message, DebugLevel v /*=DebugLevel::INFO*/)
+void cLog(const char *message, DebugLevel v /*=DebugLevel::INFO*/)
 {
     String str = "";
     str += DebugLevelToString(v);
@@ -28,12 +28,21 @@ void cLog(char *message, DebugLevel v /*=DebugLevel::INFO*/)
     Serial.println(str);
     
 }
-void cLog(String message,  DebugLevel v /*=DebugLevel::INFO*/)
+void cLog(const String message,  DebugLevel v /*=DebugLevel::INFO*/)
 {
     String str = "";
     str += DebugLevelToString(v);
     str += " - ";
     str += message;
+    Serial.println(str);
+    
+}
+void cLog(const std::string& message, DebugLevel v /*=DebugLevel::INFO*/)
+{
+    String str = "";
+    str += DebugLevelToString(v);
+    str += " - ";
+    str = message.c_str();
     Serial.println(str);
     
 }

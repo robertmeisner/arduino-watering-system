@@ -3,9 +3,10 @@
 #include "SimplePump.h"
 #include "Light.h"
 #include "CustomLog.h"
-char *WateringState::getName()
+const char *WateringState::getName()
 {
-    return "WateringState";
+    const char* msg ="WateringState"; 
+    return msg;
 }
 bool WateringState::handleLighting()
 {
@@ -54,13 +55,13 @@ bool WateringState::tick()
 
     int sensorsAvg = this->context->getMoistureAvg();
     //if avg moisture is higher than XXX stop Watering
-    if (sensorsAvg > this->context->config['MOISTURE_TRESHOLD'])
+    if (sensorsAvg > this->context->config["MOISTURE_TRESHOLD"])
     {
-        cLog(String("Moisture sensor is over MOISTURE_TRESHOLD: ") + String(sensorsAvg) +">" , DebugLevel::DEBUG);
+        cLog(String("Moisture sensor is over MOISTURE_TRESHOLD: ") + String(sensorsAvg) +">" + this->context->config["MOISTURE_TRESHOLD"].as<String>() , DebugLevel::DEBUG);
         //cLog( (this->context->config['MOISTURE_TRESHOLD']);
         cLog("Stopping Watering");
         //    this->handleIdle();
     }
-    cLog(String("Moisture sensor is below MOISTURE_TRESHOLD: ") + sensorsAvg + String("<") + this->context->config['MOISTURE_TRESHOLD'], DebugLevel::DEBUG);
+    cLog(String("Moisture sensor is below MOISTURE_TRESHOLD: ") + sensorsAvg + String("<") + this->context->config["MOISTURE_TRESHOLD"].as<String>(), DebugLevel::DEBUG);
     cLog("Watering State tick finished", DebugLevel::DEBUG);
 }
