@@ -34,8 +34,9 @@ bool SimplePump::stop()
 {
     digitalWrite(this->_pin, HIGH);
     this->sinceLastChangeChrono = millis();
-    this->nextState(PumpCommand::COMMAND_STOP);
-    return true;
+    if (this->nextState(PumpCommand::COMMAND_STOP) == PumpStates::STATE_OFF)
+        return true;
+    return false;
 }
 unsigned long SimplePump::getDurationSinceLastChange()
 {

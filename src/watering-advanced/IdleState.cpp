@@ -4,6 +4,7 @@
 #include "CustomLog.h"
 #include "Light.h"
 #include "StateFactory.h"
+#include "MoistureSensor.h"
 const char *IdleState::getName()
 {
     return "IdleState";
@@ -20,9 +21,11 @@ bool IdleState::handleLighting() {
 bool IdleState::handleIdle() {cLog("Idle can't be changed to Idle", DebugLevel::WARNING);}
 bool IdleState::init() {
     cLog("Initiating Idle State");
+      cLog("7 Sensors Count:"+String(this->context->moistureSensors.size()));
 }
 bool IdleState::tick()
 {
+     cLog("8 Sensors Count:"+String(this->context->moistureSensors.size()));
     int sensorsAvg = this->context->getMoistureAvg();
     //if avg moisture is higher than XXX stop Watering
 
@@ -34,12 +37,11 @@ bool IdleState::tick()
     if (sensorsAvg < this->context->config.MOISTURE_TRESHOLD)
     {
         cLog("Moisture under MOISTURE_TRESHOLD");
-        this->handleWatering();
+        return this->handleWatering();
     }
     if (this->context->light.getDurationSinceLastChange() > this->context->config.LIGHTING_INTERVAL)
     {
-        cLog("Turning on the light");
-        this->handleLighting();
+        return this->handleLighting();
     }
     
 }

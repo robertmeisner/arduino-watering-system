@@ -42,7 +42,7 @@ void setup()
 #define WATERING_MOISTURE_CRITICAL 45
       */
     char json[] =
-        "{\"sensor\":\"gps\",\"LIGHTING_INTERVAL\":82800000,\"LIGHTING_DURATION\":3600000,\"WATERING_MAX_DURATION\":1000,\"MOISTURE_TRESHOLD\":34,\"data\":[48.756080,2.302038]}";
+        "{\"sensor\":\"gps\",\"LIGHTING_INTERVAL\":7200,\"LIGHTING_DURATION\":3600,\"WATERING_MAX_DURATION\":1000,\"MOISTURE_TRESHOLD\":34,\"data\":[48.756080,2.302038]}";
     //cLog("Deserializing Config");
     //cLog(json);
     // Deserialize the JSON document
@@ -62,6 +62,7 @@ void setup()
     std::vector<MoistureSensor> sensors;
     sensors.push_back(MoistureSensor(6));
     sensors.push_back(MoistureSensor(7));
+  
     //mb->setupInterruptHandler(12, mbInterruptHandler, CHANGE);
 
     wateringMachine = new WateringMachine(config, sf, light, pump, sensors);

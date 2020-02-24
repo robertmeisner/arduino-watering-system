@@ -5,7 +5,7 @@
 #include "CustomLog.h"
 const char *WateringState::getName()
 {
-    const char* msg ="WateringState"; 
+    const char *msg = "WateringState";
     return msg;
 }
 bool WateringState::handleLighting()
@@ -30,7 +30,7 @@ bool WateringState::handleWatering()
 bool WateringState::handleIdle()
 {
 
-    if (this->context->light.turnOff())
+    if (this->context->pump.stop())
     {
         cLog("Changing state from WateringState to IdleState");
         this->context->setState(StateType::IDLE_STATE);
@@ -42,8 +42,8 @@ bool WateringState::init()
     cLog("Initiating the WateringState");
     if (this->context->pump.start())
     {
-       cLog("Couldn't start the pump.");
-        this->handleIdle();
+        cLog("Couldn't start the pump, switching back to Idle state.");
+        return this->handleIdle();
     }
     cLog("Initiating of the WateringState has finished");
 }
@@ -57,10 +57,16 @@ bool WateringState::tick()
     //if avg moisture is higher than XXX stop Watering
     if (sensorsAvg > this->context->config.MOISTURE_TRESHOLD)
     {
-        cLog(String("Moisture sensor is over MOISTURE_TRESHOLD: ") + String(sensorsAvg) +">" + this->context->config.MOISTURE_TRESHOLD , DebugLevel::DEBUG);
+        cLog(String("Moisture sensor is over MOISTURE_TRESHOLD: ") + String(sensorsAvg) + ">" + this->context->config.MOISTURE_TRESHOLD, DebugLevel::DEBUG);
         //cLog( (this->context->config['MOISTURE_TRESHOLD']);
         cLog("Stopping Watering");
-        //    this->handleIdle();
+        return this->handleIdle();
+    }
+    if (this->context->pump.getDurationSinceLastChange() > this->context->config.WATERING_MAX_DURATION)
+    {
+        cLog(String("Watering takes too long. Pump duration:") + String(this->context->pump.getDurationSinceLastChange()) + ">WATERING_MAX_DURATION:" + this->context->config.WATERING_MAX_DURATION, DebugLevel::DEBUG);
+        cLog("Stopping Watering");
+        return this->handleIdle();
     }
     cLog(String("Moisture sensor is below MOISTURE_TRESHOLD: ") + sensorsAvg + String("<") + this->context->config.MOISTURE_TRESHOLD, DebugLevel::DEBUG);
     cLog("Watering State tick finished", DebugLevel::DEBUG);

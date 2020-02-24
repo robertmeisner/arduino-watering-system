@@ -37,17 +37,23 @@ bool LightingState::handleIdle()
         cLog("Changing state from LightingState to IdleState");
         this->context->setState(StateType::IDLE_STATE);
         return true;
+    }else{
+         cLog("Couldn't turn lights off");
     }
     return false;
 };
 bool LightingState::init()
 {
+    cLog("Initiating the LightingState");
     this->context->light.turnOn();
 };
 bool LightingState::tick()
 {
     
-    if (this->context->light.getDurationSinceLastChange())
+    if ( this->context->light.getDurationSinceLastChange()>this->context->config.LIGHTING_DURATION)
     {
+        cLog( "Switching back to IdleState: "+this->context->light.getDurationSinceLastChange()+'>'+this->context->config.LIGHTING_DURATION);
+        return this->handleIdle();
     }
+    return true;
 };

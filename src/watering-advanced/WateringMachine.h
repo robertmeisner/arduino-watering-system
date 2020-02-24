@@ -24,6 +24,7 @@ public:
     void init();
     void tick();
     int getMoistureAvg();
+    //int getMoistureAvg();
     WateringMachine *setState( StateType type);
     WateringMachineStateBase *state;
     WateringMachineConfig &config;

@@ -15,16 +15,21 @@ int MoistureSensor::read()
 {
   if (this->nextState(MoistureSensorCommand::COMMAND_READ) == MoistureSensorStates::STATE_READING)
   {
-#ifndef WATERING_TEST
-    this->_moistureReadingNumber++;
+    int value = 0;
+    if (false)
+    {
+      this->_moistureReadingNumber++;
 
-    int value = analogRead(this->_pin);  // Read analog value
-    value = constrain(value, 400, 1023); // Keep the ranges!
-    value = map(value, 400, 1023, 100, 0);
-#else
-    srand(time(0));
-    int value = random(0, 99);
-#endif
+      int value = analogRead(this->_pin);  // Read analog value
+      value = constrain(value, 400, 1023); // Keep the ranges!
+      value = map(value, 400, 1023, 100, 0);
+    }
+    else
+    {
+      srand(time(0));
+      int value = random(0, 99);
+      //cLog("random number");
+    }
     this->_moistureReadings[this->_moistureReadingNumber - 1] = value;
 
     if (this->_moistureReadingNumber > 7)
@@ -42,9 +47,9 @@ int MoistureSensor::readAvg()
 {
   cLog("Reading the sensor average");
   int avg = 0;
-  for (byte j = 0; j < MOISTURE_READINGS_COUNT; j++)
+  for (byte j = 0; j < MOISTURE_READINGS_COUNT; ++j)
   {
-    avg += this->_moistureReadings[j];
+    //avg += this->_moistureReadings[j];
   }
 
   return avg / MOISTURE_READINGS_COUNT;
