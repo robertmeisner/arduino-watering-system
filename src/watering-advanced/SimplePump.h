@@ -11,17 +11,20 @@
 class SimplePump : public PumpStateMachine
 {
 public:
-  SimplePump(int pin, int initialSpeed);
+  SimplePump(bool (*startFunc)(int),bool (*stopFunc)(),bool (*changeSpeedFunc)(int),bool (*initFunc)()=nullptr, int initialSpeed=100);
 
   bool start(int speed = 100);
   bool stop();
   bool changeSpeed(int speed);
   unsigned long getDurationSinceLastChange();
 
-  void init();
+  bool init();
 
 private:
-  int _pin;
+   bool (*_startFunc)(int);
+   bool (*_stopFunc)();
+   bool (*_changeSpeedFunc)(int);
+   bool (*_initFunc)();
   int _speed = 0;
   unsigned long sinceLastChangeChrono;
 };

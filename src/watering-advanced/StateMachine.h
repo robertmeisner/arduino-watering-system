@@ -5,7 +5,7 @@ class StateMachine
 {
   public:
     //initialize the machine
-    inline virtual void init(){/*nothing*/};
+    inline virtual bool init(){/*nothing*/};
   private:
 
 };

@@ -16,7 +16,7 @@ public:
   ButtonModes buttonMode = ButtonModes::MODE_PULLDOWN;
   void setupInterruptHandler(uint8_t irq_pin, void (*interruptFunction)(void), int value);
   void handleInterrupt(void);
-  void init();
+  bool init();
   void tick();
 private:
   uint8_t _pin;

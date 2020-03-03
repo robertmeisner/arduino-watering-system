@@ -29,7 +29,7 @@ bool WateringState::handleWatering()
 
 bool WateringState::handleIdle()
 {
-
+    cLog("Changing WateringState to IdleState..");
     if (this->context->pump.stop())
     {
         cLog("Changing state from WateringState to IdleState");
@@ -40,7 +40,7 @@ bool WateringState::handleIdle()
 bool WateringState::init()
 {
     cLog("Initiating the WateringState");
-    if (this->context->pump.start())
+    if (!this->context->pump.start())
     {
         cLog("Couldn't start the pump, switching back to Idle state.");
         return this->handleIdle();

@@ -1,25 +1,33 @@
 #include "SimpleSwitch.h"
-#include "Arduino.h"
 #include "CustomLog.h"
-//IMPLEMENTATION 
-SimpleSwitch::SimpleSwitch(int pin):SwitchStateMachine(), _pin(pin)
+//IMPLEMENTATION
+bool SimpleSwitchInitMockFunc()
 {
-  
+  return true;
 }
-void SimpleSwitch::init(){
+SimpleSwitch::SimpleSwitch(bool onFunc(), bool offFunc(), bool initFunc()) : SwitchStateMachine()
+{
+  this->_onFunc = onFunc;
+  this->_offFunc = offFunc;
+  if (initFunc != nullptr)
+    this->_initFunc = initFunc;
+  else
+    this->_initFunc = SimpleSwitchInitMockFunc;
+}
+bool SimpleSwitch::init()
+{
   cLog("Initiating SimpleSwitch");
-  pinMode(this->_pin, OUTPUT);
+  return this->_initFunc();
 }
 bool SimpleSwitch::turnOff()
 {
   SwitchStates stateTmp = this->state;
-  digitalWrite(this->_pin, LOW);
   this->nextState(SwitchCommand::COMMAND_OFF);
   return true;
 }
 bool SimpleSwitch::turnOn()
 {
-  SwitchStates stateTmp = this->state;
-  digitalWrite(this->_pin, HIGH);
-  return stateTmp != this->nextState(SwitchCommand::COMMAND_ON);
+
+  this->_onFunc();
+  return SwitchStates::SWITCH_ON == this->nextState(SwitchCommand::COMMAND_ON);
 }

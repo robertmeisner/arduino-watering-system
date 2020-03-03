@@ -3,7 +3,7 @@
 #ifndef WateringMachine_h
 #define WateringMachine_h
 //#include "state-pattern/WateringMachineStateBase.h"
-#include<vector>
+#include <vector>
 
 #include "StateTypeEnum.h"
 #include "WateringMachineConfig.h"
@@ -15,17 +15,16 @@ class MoistureSensor;
 class SimplePump;
 class StateFactory;
 
-
 class WateringMachine
 {
 public:
-    WateringMachine( WateringMachineConfig &doc,StateFactory &sf,Light &l, SimplePump &sp,  std::vector<MoistureSensor> &moistureSensors);
-   void lightsOn();
-    void init();
+    WateringMachine(WateringMachineConfig &doc, StateFactory &sf, Light &l, SimplePump &sp, std::vector<MoistureSensor> &moistureSensors);
+    void lightsOn();
+    bool init();
     void tick();
     int getMoistureAvg();
     //int getMoistureAvg();
-    WateringMachine *setState( StateType type);
+    WateringMachine *setState(StateType type);
     WateringMachineStateBase *state;
     WateringMachineConfig &config;
     Light &light;

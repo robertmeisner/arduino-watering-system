@@ -10,13 +10,15 @@
 class SimpleSwitch : public SwitchStateMachine
 {
 public:
-  SimpleSwitch(int pin);
-  void init();
+  SimpleSwitch(bool onFunc(),bool offFunc(),bool initFunc()=nullptr);
+  bool init();
   bool turnOn();
   bool turnOff();
 
 private:
-  int _pin;
+  bool (*_onFunc)();
+  bool (*_offFunc)();
+  bool (*_initFunc)();
 };
 
 #endif

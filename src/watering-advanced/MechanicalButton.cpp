@@ -6,7 +6,7 @@
 
 MechanicalButton::MechanicalButton(int pin, ButtonModes mode/*=ButtonModes::MODE_PULLDOWN*/) : _pin(pin), buttonMode(mode)
 {}
-void MechanicalButton::init()
+bool MechanicalButton::init()
 {
   pinMode(this->_pin, INPUT);
 }

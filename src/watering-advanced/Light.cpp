@@ -2,11 +2,11 @@
 #include "Arduino.h"
 #include "SwitchStateMachine.h"
 #include "CustomLog.h"
-Light::Light(int pin) : SimpleSwitch(pin){};
-void Light::init()
+Light::Light(bool onFunc(), bool offFunc(), bool initFunc() ) : SimpleSwitch(onFunc, offFunc, initFunc){};
+bool Light::init()
 {
     cLog("Initiating Light");
-    SimpleSwitch::init();
+    return SimpleSwitch::init();
 }
 bool Light::turnOn()
 {
@@ -14,14 +14,16 @@ bool Light::turnOn()
     {
         return this->restartTimer();
     }
+    return false;
 };
 bool Light::turnOff()
 {
-     cLog("Turning off the Light");
+    cLog("Turning off the Light");
     if (SimpleSwitch::turnOff())
     {
         return this->restartTimer();
     }
+    return false;
 };
 bool Light::isOn()
 {
@@ -31,6 +33,7 @@ bool Light::restartTimer()
 {
     cLog("Restarting the time");
     this->sinceLastChangeChrono = millis();
+    return true;
 };
 unsigned long Light::getDurationSinceLastChange()
 {

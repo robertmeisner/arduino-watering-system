@@ -1,35 +1,29 @@
 #include "MoistureSensor.h"
 #include "Arduino.h"
 #include "CustomLog.h"
-MoistureSensor::MoistureSensor(int pin)
+bool mockFunc()
 {
-  //set all values to full wet
-  for (byte j = 0; j < MOISTURE_READINGS_COUNT; j++)
-  {
-    this->_moistureReadings[j] = 100;
-  }
-  _pin = pin;
+  return true;
 }
-
-int MoistureSensor::read()
+MoistureSensor::MoistureSensor(float readFunc(), bool initFunc())
 {
+  this->_readFunc = readFunc; 
+  if (initFunc != nullptr)
+    this->_initFunc = initFunc;
+  else
+    this->_initFunc = mockFunc;
+}
+float MoistureSensor::read()
+{
+  cLog("MoistureSensor::read()");
   if (this->nextState(MoistureSensorCommand::COMMAND_READ) == MoistureSensorStates::STATE_READING)
   {
-    int value = 0;
-    if (false)
-    {
-      this->_moistureReadingNumber++;
+    cLog("MoistureSensor::read() - inner");
+    float value = 0;
 
-      int value = analogRead(this->_pin);  // Read analog value
-      value = constrain(value, 400, 1023); // Keep the ranges!
-      value = map(value, 400, 1023, 100, 0);
-    }
-    else
-    {
-      srand(time(0));
-      int value = random(0, 99);
-      //cLog("random number");
-    }
+    this->_moistureReadingNumber++;
+    value = this->_readFunc(); // Read analog value
+
     this->_moistureReadings[this->_moistureReadingNumber - 1] = value;
 
     if (this->_moistureReadingNumber > 7)
@@ -38,7 +32,7 @@ int MoistureSensor::read()
     }
 
     this->nextState(MoistureSensorCommand::COMMAND_FINISHED_READ);
-    return value;
+    return this->_moistureReadings[this->_moistureReadingNumber - 1];
   }
   return -1;
 }
@@ -49,23 +43,25 @@ int MoistureSensor::readAvg()
   int avg = 0;
   for (byte j = 0; j < MOISTURE_READINGS_COUNT; ++j)
   {
-    //avg += this->_moistureReadings[j];
+    avg += this->_moistureReadings[j];
   }
 
   return avg / MOISTURE_READINGS_COUNT;
 }
 MoistureSensorStates MoistureSensor::nextState(MoistureSensorCommand command)
 {
+
   switch (this->state)
   {
   case MoistureSensorStates::STATE_IDLE:
-    if (MoistureSensorCommand::COMMAND_READ)
+    if (command == MoistureSensorCommand::COMMAND_READ)
     {
       this->state = MoistureSensorStates::STATE_READING;
     }
     break;
   case MoistureSensorStates::STATE_READING:
-    if (MoistureSensorCommand::COMMAND_FINISHED_READ)
+
+    if (command == MoistureSensorCommand::COMMAND_FINISHED_READ)
     {
       this->state = MoistureSensorStates::STATE_IDLE;
     }
@@ -77,7 +73,16 @@ MoistureSensorStates MoistureSensor::nextState(MoistureSensorCommand command)
   return this->state;
 }
 
-void MoistureSensor::init()
+bool MoistureSensor::init()
 {
-  cLog("Initiating Moisture Sensor");
+  if (this->_initFunc())
+  {
+    //set all values to full wet
+    for (byte j = 0; j < MOISTURE_READINGS_COUNT; j++)
+    {
+      this->_moistureReadings[j] = 100.0;
+    }
+    return true;
+  }
+  return false;
 }

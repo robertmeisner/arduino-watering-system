@@ -9,8 +9,8 @@
 class Light : public SimpleSwitch
 {
 public:
-    Light(int pin);
-    void init();
+    Light(bool onFunc(),bool offFunc(),bool initFunc()=nullptr);
+    bool init();
     bool turnOn();
     bool turnOff();
     bool isOn();
@@ -18,7 +18,6 @@ public:
     SwitchStates state = SwitchStates::SWITCH_OFF;
 
 private:
-    int _pin;
     unsigned long sinceLastChangeChrono;
     bool restartTimer();
 };

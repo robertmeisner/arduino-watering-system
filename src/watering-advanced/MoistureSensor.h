@@ -19,21 +19,21 @@ enum MoistureSensorCommand
   COMMAND_FINISHED_READ
 };
 
-class MoistureSensor:StateMachine
+class MoistureSensor : StateMachine
 {
 public:
-  MoistureSensor(int pin);
+  MoistureSensor(float readFunc(),bool initFunc()=nullptr);
 
-  int read();
+  float read();
   int readAvg();
-  void init();
-  MoistureSensorStates moistureState = MoistureSensorStates::STATE_IDLE;
+  bool init();
 
 private:
   MoistureSensorStates state = MoistureSensorStates::STATE_IDLE;
-  int _pin;
+  float (*_readFunc)();
+  bool (*_initFunc)();
   int _moistureReadingNumber = 0;
-  int _moistureReadings[MOISTURE_READINGS_COUNT];
+  float _moistureReadings[MOISTURE_READINGS_COUNT];
   MoistureSensorStates nextState(MoistureSensorCommand p);
 };
 
