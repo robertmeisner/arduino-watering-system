@@ -15,6 +15,7 @@ public:
     bool handleIdle();
     bool init();
     bool tick();
+    StateType type = StateType::WATERING_STATE;
 
 protected:
     int sensorsAverage = 100;

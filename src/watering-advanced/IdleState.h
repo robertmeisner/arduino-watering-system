@@ -13,6 +13,7 @@ public:
     bool handleIdle();
     bool init();
     bool tick();
+    StateType type = StateType::IDLE_STATE;
 
 protected:
     //WateringMachine context;

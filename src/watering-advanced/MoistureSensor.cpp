@@ -7,7 +7,7 @@ bool mockFunc()
 }
 MoistureSensor::MoistureSensor(float readFunc(), bool initFunc())
 {
-  this->_readFunc = readFunc; 
+  this->_readFunc = readFunc;
   if (initFunc != nullptr)
     this->_initFunc = initFunc;
   else
@@ -15,10 +15,9 @@ MoistureSensor::MoistureSensor(float readFunc(), bool initFunc())
 }
 float MoistureSensor::read()
 {
-  cLog("MoistureSensor::read()");
+  cLog("MoistureSensor::read()", DebugLevel::DEBUG);
   if (this->nextState(MoistureSensorCommand::COMMAND_READ) == MoistureSensorStates::STATE_READING)
   {
-    cLog("MoistureSensor::read() - inner");
     float value = 0;
 
     this->_moistureReadingNumber++;
@@ -37,10 +36,11 @@ float MoistureSensor::read()
   return -1;
 }
 
-int MoistureSensor::readAvg()
+float MoistureSensor::readAvg()
 {
-  cLog("Reading the sensor average");
-  int avg = 0;
+  cLog("Reading the sensor average", DebugLevel::DEBUG);
+  this->read();
+  float avg = 0;
   for (byte j = 0; j < MOISTURE_READINGS_COUNT; ++j)
   {
     avg += this->_moistureReadings[j];

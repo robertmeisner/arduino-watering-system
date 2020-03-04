@@ -4,6 +4,7 @@ enum StateType
 {
     WATERING_STATE,
     IDLE_STATE,
-    LIGHTING_STATE
+    LIGHTING_STATE,
+    UNDEFINED_STATE
 };
 #endif

@@ -6,7 +6,7 @@
 Adafruit_ADS1115 ads;
 float Sensor1ReadFunc()
 {
-    return 90;
+    return 10;
 }
 float Sensor2ReadFunc()
 {

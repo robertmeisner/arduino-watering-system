@@ -31,7 +31,7 @@ bool Light::isOn()
 }
 bool Light::restartTimer()
 {
-    cLog("Restarting the time");
+    cLog("Restarting the Light timer");
     this->sinceLastChangeChrono = millis();
     return true;
 };

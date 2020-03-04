@@ -12,7 +12,16 @@
 #include "IdleState.h"
 #include "WateringState.h"
 #include "StateFactory.h"
+
+#define WATERING_TEST 1
+
+#ifdef WATERING_TEST
+#include "ArduinoFunctions.Test.h"
+#else
 #include "ArduinoFunctions.h"
+#endif
+
+
 
 //MechanicalButton *mb = new MechanicalButton(12);
 //ALWAYS USE h and cpp files!!!!! laways h only declrations and cpp for definiton
@@ -23,7 +32,7 @@
 //{
 // xc->handleInterrupt();
 //}
-#define WATERING_TEST
+
 WateringMachineConfig config;
 WateringMachine *wateringMachine;
 
@@ -91,5 +100,6 @@ void setup()
 };
 void loop()
 {
+    delay(1000);
     wateringMachine->tick();
 };

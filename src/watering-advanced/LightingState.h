@@ -12,6 +12,7 @@ public:
     bool handleIdle();
     bool init();
     bool tick();
+    StateType type = StateType::LIGHTING_STATE;
     //LightingState(WateringMachine* wm);
 
 protected:

@@ -22,7 +22,7 @@ public:
     void lightsOn();
     bool init();
     void tick();
-    int getMoistureAvg();
+    float getMoistureAvg();
     //int getMoistureAvg();
     WateringMachine *setState(StateType type);
     WateringMachineStateBase *state;

@@ -55,9 +55,9 @@ bool WateringState::tick()
 
     int sensorsAvg = this->context->getMoistureAvg();
     //if avg moisture is higher than XXX stop Watering
-    if (sensorsAvg > this->context->config.MOISTURE_TRESHOLD)
+    if (sensorsAvg > (this->context->config.MOISTURE_TRESHOLD * 1.25))
     {
-        cLog(String("Moisture sensor is over MOISTURE_TRESHOLD: ") + String(sensorsAvg) + ">" + this->context->config.MOISTURE_TRESHOLD, DebugLevel::DEBUG);
+        cLog(String("Moisture is over MOISTURE_TRESHOLD+20%: ") + String(sensorsAvg) + ">" + String(this->context->config.MOISTURE_TRESHOLD * 1.25), DebugLevel::DEBUG);
         //cLog( (this->context->config['MOISTURE_TRESHOLD']);
         cLog("Stopping Watering");
         return this->handleIdle();

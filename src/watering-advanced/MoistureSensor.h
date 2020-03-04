@@ -8,6 +8,7 @@
 #ifndef MoistureSensor_h
 #define MoistureSensor_h
 #define MOISTURE_READINGS_COUNT 8
+#define MOISTURE_READINGS_
 enum MoistureSensorStates
 {
   STATE_READING,
@@ -25,7 +26,7 @@ public:
   MoistureSensor(float readFunc(),bool initFunc()=nullptr);
 
   float read();
-  int readAvg();
+  float readAvg();
   bool init();
 
 private:

@@ -1,6 +1,7 @@
 
 #include "WateringMachineConfig.h"
 #include "ArduinoJson.h"
+#include "Arduino.h"
 void loadWateringConfig(const char *file, WateringMachineConfig &config)
 {
   // Open file for reading
