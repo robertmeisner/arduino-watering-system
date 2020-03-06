@@ -53,7 +53,7 @@ bool WateringState::tick()
     // if last time checked is 2 min ago or more
     // read moisture
 
-    int sensorsAvg = this->context->getMoistureAvg();
+    float sensorsAvg = this->context->getMoistureAvg();
     //if avg moisture is higher than XXX stop Watering
     if (sensorsAvg > (this->context->config.MOISTURE_TRESHOLD * 1.25))
     {

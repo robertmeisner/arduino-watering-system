@@ -21,9 +21,8 @@ bool SimpleSwitch::init()
 }
 bool SimpleSwitch::turnOff()
 {
-  SwitchStates stateTmp = this->state;
-  this->nextState(SwitchCommand::COMMAND_OFF);
-  return true;
+  this->_offFunc();
+  return SwitchStates::SWITCH_OFF == this->nextState(SwitchCommand::COMMAND_OFF);
 }
 bool SimpleSwitch::turnOn()
 {

@@ -13,15 +13,13 @@
 #include "WateringState.h"
 #include "StateFactory.h"
 
-#define WATERING_TEST 1
+//#define WATERING_TEST 1
 
 #ifdef WATERING_TEST
 #include "ArduinoFunctions.Test.h"
 #else
 #include "ArduinoFunctions.h"
 #endif
-
-
 
 //MechanicalButton *mb = new MechanicalButton(12);
 //ALWAYS USE h and cpp files!!!!! laways h only declrations and cpp for definiton
@@ -35,6 +33,8 @@
 
 WateringMachineConfig config;
 WateringMachine *wateringMachine;
+static SimplePump pump(startPumpFunc, stopPumpFunc, changePumpSpeedFunc, initPumpFunc, 0); //static so they wont be deleted after setup is detroyed
+static Light light(lightOnFunc, lightOffFunc, lightInitFunc);
 
 void setup()
 {
@@ -50,8 +50,12 @@ void setup()
 #define WATERING_CYCLE_PAUSE_DURATION 5000
 #define WATERING_MOISTURE_CRITICAL 45
       */
+    // 600000 ms=10 min
+    // 14400000 ms = 4 h
+    //28800000 ms= 8h
+    //57600000 ms =16h
     char json[] =
-        "{\"sensor\":\"gps\",\"LIGHTING_INTERVAL\":7200,\"LIGHTING_DURATION\":3600,\"WATERING_MAX_DURATION\":1000,\"MOISTURE_TRESHOLD\":34,\"data\":[48.756080,2.302038]}";
+        "{\"sensor\":\"gps\",\"LIGHTING_INTERVAL\":57600000,\"LIGHTING_DURATION\":28800000,\"WATERING_MAX_DURATION\":600000,\"MOISTURE_TRESHOLD\":34,\"data\":[48.756080,2.302038]}";
     //cLog("Deserializing Config");
     //cLog(json);
     // Deserialize the JSON document
@@ -66,9 +70,6 @@ void setup()
     }*/
     loadWateringConfig(json, config);
     //tak sie tworzy obiekty bez parametrow?!?!?!?!
-    static SimplePump pump(startPumpFunc, stopPumpFunc, changePumpSpeedFunc, initPumpFunc, 0); //static so they wont be deleted after setup is detroyed
-
-    static Light light(lightOnFunc, lightOffFunc, lightInitFunc);
 
     /**
      * 
@@ -79,7 +80,7 @@ void setup()
     delay(100);
 
     static std::vector<MoistureSensor> sensors;
-    sensors.push_back(MoistureSensor(Sensor1ReadFunc));//strange object creation 
+    sensors.push_back(MoistureSensor(Sensor1ReadFunc)); //strange object creation
     sensors.push_back(MoistureSensor(Sensor2ReadFunc));
     //sensors[0].init();
     //sensors[1].init();
@@ -100,6 +101,10 @@ void setup()
 };
 void loop()
 {
-    delay(1000);
+    //light.turnOn();
+    //delay(2000);
+    //light.turnOff();
+    delay(5000);
     wateringMachine->tick();
+   // light.
 };

@@ -10,6 +10,7 @@ bool Light::init()
 }
 bool Light::turnOn()
 {
+     cLog("Turning on the Light");
     if (SimpleSwitch::turnOn())
     {
         return this->restartTimer();

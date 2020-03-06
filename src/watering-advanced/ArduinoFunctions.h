@@ -2,11 +2,12 @@
 #include <Wire.h>
 #include <Adafruit_ADS1015.h>
 #ifndef ArduinoFunctions_h
-#define ArduinoFunctions_h 
-Adafruit_ADS1115 ads;
+#define ArduinoFunctions_h
+static Adafruit_ADS1115 ads;
 float Sensor1ReadFunc()
 {
     float adc = ads.readADC_SingleEnded(0);
+    Serial.println("raw sensor value: " + String(adc));
     adc = constrain(adc, 8400, 23000); // Keep the ranges!
     adc = map(adc, 8400, 23000, 100, 0);
     return adc;
@@ -14,23 +15,26 @@ float Sensor1ReadFunc()
 float Sensor2ReadFunc()
 {
     float adc = ads.readADC_SingleEnded(1);
+    Serial.println("raw sensor value: " + String(adc));
     adc = constrain(adc, 8400, 23000); // Keep the ranges!
     adc = map(adc, 8400, 23000, 100, 0);
     return adc;
 }
-bool initPumpFunc()
-{
-    pinMode(14, OUTPUT);
-    return true;
-}
+
 bool startPumpFunc(int speed)
 {
-    digitalWrite(14, HIGH);
+    digitalWrite(14, LOW);
     return true;
 }
 bool stopPumpFunc()
 {
-    digitalWrite(14, LOW);
+    digitalWrite(14, HIGH);
+    return true;
+}
+bool initPumpFunc()
+{
+    pinMode(14, OUTPUT);
+    stopPumpFunc();
     return true;
 }
 bool changePumpSpeedFunc(int speed)
@@ -39,17 +43,18 @@ bool changePumpSpeedFunc(int speed)
 }
 bool lightOnFunc()
 {
-    digitalWrite(12, HIGH);
+    digitalWrite(13, LOW);
     return true;
 }
 bool lightOffFunc()
 {
-    digitalWrite(12, LOW);
+    digitalWrite(13, HIGH);
     return true;
 }
 bool lightInitFunc()
 {
-    pinMode(12, OUTPUT);
+    pinMode(13, OUTPUT);
+    lightOffFunc();
     return true;
 }
 #endif

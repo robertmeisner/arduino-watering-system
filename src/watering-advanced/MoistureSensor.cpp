@@ -15,7 +15,7 @@ MoistureSensor::MoistureSensor(float readFunc(), bool initFunc())
 }
 float MoistureSensor::read()
 {
-  cLog("MoistureSensor::read()", DebugLevel::DEBUG);
+  
   if (this->nextState(MoistureSensorCommand::COMMAND_READ) == MoistureSensorStates::STATE_READING)
   {
     float value = 0;
@@ -31,6 +31,7 @@ float MoistureSensor::read()
     }
 
     this->nextState(MoistureSensorCommand::COMMAND_FINISHED_READ);
+    cLog("MoistureSensor::read() :: "+String(value), DebugLevel::DEBUG);
     return this->_moistureReadings[this->_moistureReadingNumber - 1];
   }
   return -1;
