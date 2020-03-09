@@ -11,9 +11,12 @@
 WateringMachine::WateringMachine(WateringMachineConfig &doc, StateFactory &sf, Light &l, SimplePump &sp, std::vector<MoistureSensor> &ms) : config(doc), stateFactory(sf), light(l), pump(sp), moistureSensors(ms)
 {
 }
-void WateringMachine::lightsOn()
+void WateringMachine::turnLightingOn()
 {
     this->state->handleLighting();
+}void WateringMachine::turnIdle()
+{
+    this->state->handleIdle();
 }
 WateringMachine *WateringMachine::setState(StateType type)
 {

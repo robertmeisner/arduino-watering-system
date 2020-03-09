@@ -19,11 +19,11 @@ class WateringMachine
 {
 public:
     WateringMachine(WateringMachineConfig &doc, StateFactory &sf, Light &l, SimplePump &sp, std::vector<MoistureSensor> &moistureSensors);
-    void lightsOn();
+    void turnLightingOn();
+    void turnIdle();
     bool init();
     void tick();
     float getMoistureAvg();
-    //int getMoistureAvg();
     WateringMachine *setState(StateType type);
     WateringMachineStateBase *state;
     WateringMachineConfig &config;

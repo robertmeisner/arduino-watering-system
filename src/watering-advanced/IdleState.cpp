@@ -3,6 +3,7 @@
 #include "WateringMachineConfig.h"
 #include "CustomLog.h"
 #include "Light.h"
+#include "SimplePump.h"
 #include "StateFactory.h"
 #include "MoistureSensor.h"
 const char *IdleState::getName()
@@ -34,12 +35,17 @@ bool IdleState::tick()
     //serializeJson(this->context->config, json);
     //cLog(json);
 
-    if (sensorsAvg < this->context->config.MOISTURE_TRESHOLD)
+    if (sensorsAvg < this->context->config.MOISTURE_TRESHOLD && this->context->config.WATERING_MIN_INTERVAL < this->context->pump.getDurationSinceLastChange())
     {
         cLog("Moisture under MOISTURE_TRESHOLD: " + String(sensorsAvg) + '<' + String(this->context->config.MOISTURE_TRESHOLD));
         return this->handleWatering();
     }
-    if (this->context->light.getDurationSinceLastChange() > this->context->config.LIGHTING_INTERVAL)
+    else if (this->context->pump.getDurationSinceLastChange() > this->context->config.WATERING_MAX_INTERVAL)
+    {
+        cLog("Moisture under MOISTURE_TRESHOLD: " + String(sensorsAvg) + '<' + String(this->context->config.MOISTURE_TRESHOLD));
+        return this->handleWatering();
+    }
+    else if (this->context->light.getDurationSinceLastChange() > this->context->config.LIGHTING_INTERVAL)
     {
         cLog(String("Time passed since last ligting is higher than LIGHTING_INTERVAL: ") + String(this->context->light.getDurationSinceLastChange()) + String('>') + String(this->context->config.LIGHTING_INTERVAL));
         return this->handleLighting();

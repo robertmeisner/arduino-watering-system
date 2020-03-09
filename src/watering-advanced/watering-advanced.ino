@@ -13,6 +13,8 @@
 #include "WateringState.h"
 #include "StateFactory.h"
 
+#include "CommandLine.h"
+
 //#define WATERING_TEST 1
 
 #ifdef WATERING_TEST
@@ -36,6 +38,27 @@ WateringMachine *wateringMachine;
 static SimplePump pump(startPumpFunc, stopPumpFunc, changePumpSpeedFunc, initPumpFunc, 0); //static so they wont be deleted after setup is detroyed
 static Light light(lightOnFunc, lightOffFunc, lightInitFunc);
 
+bool serialCommand(char *commandLine)
+{
+    //  print2("\nCommand: ", commandLine);
+    int result;
+
+    char *ptrToCommandName = strtok(commandLine, delimiters);
+    //  print2("commandName= ", ptrToCommandName);
+
+    if (strcmp(ptrToCommandName, "turnLight") == 0)
+    { //Modify here
+        wateringMachine->turnLightingOn();
+    }
+    else if (strcmp(ptrToCommandName, "turnIdle") == 0)
+    { //Modify here
+        wateringMachine->turnIdle();
+    }
+    else
+    {
+        nullCommand(ptrToCommandName);
+    }
+}
 void setup()
 {
     // initialize the serial communication:
@@ -54,8 +77,8 @@ void setup()
     // 14400000 ms = 4 h
     //28800000 ms= 8h
     //57600000 ms =16h
-    char json[] =
-        "{\"sensor\":\"gps\",\"LIGHTING_INTERVAL\":57600000,\"LIGHTING_DURATION\":28800000,\"WATERING_MAX_DURATION\":600000,\"MOISTURE_TRESHOLD\":34,\"data\":[48.756080,2.302038]}";
+    //char json[] =
+    //    "{\"sensor\":\"gps\",\"LIGHTING_INTERVAL\":57600000,\"LIGHTING_DURATION\":28800000,\"WATERING_MAX_DURATION\":600000,\"MOISTURE_TRESHOLD\":34,\"data\":[48.756080,2.302038]}";
     //cLog("Deserializing Config");
     //cLog(json);
     // Deserialize the JSON document
@@ -68,8 +91,14 @@ void setup()
         Serial.println(error.c_str());
         return;
     }*/
-    loadWateringConfig(json, config);
+    //loadWateringConfig(json, config);
     //tak sie tworzy obiekty bez parametrow?!?!?!?!
+    unsigned long ONE_HOUR = 1000 * 60 * 60;
+    config.LIGHTING_DURATION = ONE_HOUR * 8;
+    config.LIGHTING_INTERVAL = ONE_HOUR * 16;
+    config.WATERING_MAX_DURATION = ONE_HOUR / 6;
+    config.WATERING_MAX_INTERVAL = ONE_HOUR * 24 * 10;
+    config.WATERING_MIN_INTERVAL = ONE_HOUR;
 
     /**
      * 
@@ -104,7 +133,11 @@ void loop()
     //light.turnOn();
     //delay(2000);
     //light.turnOff();
-    delay(5000);
+    bool received = getCommandLineFromSerialPort(CommandLine); //global CommandLine is defined in CommandLine.h
+    if (received)
+        serialCommand(CommandLine);
+
     wateringMachine->tick();
-   // light.
+    delay(5000);
+    // light.
 };

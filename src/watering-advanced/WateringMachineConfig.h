@@ -13,14 +13,18 @@ char json[] =
  * */
 struct WateringMachineConfig
 {
-  int LIGHTING_INTERVAL;
-  int LIGHTING_DURATION;
-  int WATERING_MAX_DURATION;
-  int MOISTURE_TRESHOLD;
+  unsigned long LIGHTING_INTERVAL;
+  unsigned long LIGHTING_DURATION;
+  unsigned long WATERING_MAX_DURATION;
+  unsigned long WATERING_MAX_INTERVAL;
+  unsigned long WATERING_MIN_INTERVAL;
+  unsigned long MOISTURE_TRESHOLD;
+  /*
   char nodeRedHostname[128];
   char nodeRedUser[64];
   char nodeRePass[64];
   int nodeRedPort;
+  */
 };
 void loadWateringConfig(const char *file, WateringMachineConfig &config);
 #endif
