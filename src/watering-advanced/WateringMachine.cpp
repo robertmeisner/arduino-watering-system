@@ -11,12 +11,17 @@
 WateringMachine::WateringMachine(WateringMachineConfig &doc, StateFactory &sf, Light &l, SimplePump &sp, std::vector<MoistureSensor> &ms) : config(doc), stateFactory(sf), light(l), pump(sp), moistureSensors(ms)
 {
 }
-void WateringMachine::turnLightingOn()
+void WateringMachine::turnLight()
 {
     this->state->handleLighting();
-}void WateringMachine::turnIdle()
+}
+void WateringMachine::turnIdle()
 {
     this->state->handleIdle();
+}
+void WateringMachine::turnWatering()
+{
+    this->state->handleWatering();
 }
 WateringMachine *WateringMachine::setState(StateType type)
 {
@@ -34,16 +39,10 @@ float WateringMachine::getMoistureAvg()
     }
 
     float avg = 0;
-    //for some reason iterator doesnt work??
     for (std::vector<MoistureSensor>::iterator it = this->moistureSensors.begin(); it != this->moistureSensors.end(); ++it)
-     {
+    {
         avg += it->readAvg();
     }
-
-    //for (int i = 0; i < this->moistureSensors.size(); i++)
-    //{
-        // avg =avg+ (this->moistureSensors.at(i).readAvg());
-   // }
 
     cLog(String("Average for all Moisture sensors reads: ") + (avg / this->moistureSensors.size()));
     return avg / this->moistureSensors.size();

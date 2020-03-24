@@ -18,9 +18,21 @@ class StateFactory;
 class WateringMachine
 {
 public:
+    /**
+     * WateringMachine 
+     * saadsadasd
+     * asdasdasdasdsa
+     * sad
+     * @param  {WateringMachineConfig} doc                   : 
+     * @param  {StateFactory} sf                             : 
+     * @param  {Light} l                                     : 
+     * @param  {SimplePump} sp                               : 
+     * @param  {std::vector<MoistureSensor>} moistureSensors : 
+     */
     WateringMachine(WateringMachineConfig &doc, StateFactory &sf, Light &l, SimplePump &sp, std::vector<MoistureSensor> &moistureSensors);
-    void turnLightingOn();
+    void turnLight();
     void turnIdle();
+    void turnWatering();
     bool init();
     void tick();
     float getMoistureAvg();
@@ -33,11 +45,3 @@ public:
     StateFactory &stateFactory;
 };
 #endif
-//Humidity sensor #1
-//Humidity Sensor #2
-//Pumps switch
-//Light
-//Screen
-//Switch
-//Button
-//Machine

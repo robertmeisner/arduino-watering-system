@@ -6,15 +6,12 @@
 #include "CustomLog.h"
 #include "WateringMachine.h"
 #include "WateringMachineConfig.h"
-
 #include "WateringMachineStateBase.h"
 #include "LightingState.h"
 #include "IdleState.h"
 #include "WateringState.h"
 #include "StateFactory.h"
-
 #include "CommandLine.h"
-
 //#define WATERING_TEST 1
 
 #ifdef WATERING_TEST
@@ -37,107 +34,66 @@ WateringMachineConfig config;
 WateringMachine *wateringMachine;
 static SimplePump pump(startPumpFunc, stopPumpFunc, changePumpSpeedFunc, initPumpFunc, 0); //static so they wont be deleted after setup is detroyed
 static Light light(lightOnFunc, lightOffFunc, lightInitFunc);
-
+/**
+ * 
+ * @param  {char*} commandLine : 
+ * @return {bool}              : 
+ */
 bool serialCommand(char *commandLine)
 {
     //  print2("\nCommand: ", commandLine);
-    int result;
 
     char *ptrToCommandName = strtok(commandLine, delimiters);
     //  print2("commandName= ", ptrToCommandName);
 
     if (strcmp(ptrToCommandName, "turnLight") == 0)
     { //Modify here
-        wateringMachine->turnLightingOn();
+        wateringMachine->turnLight();
     }
     else if (strcmp(ptrToCommandName, "turnIdle") == 0)
     { //Modify here
         wateringMachine->turnIdle();
     }
+    else if (strcmp(ptrToCommandName, "turnWatering") == 0)
+    { //Modify here
+        wateringMachine->turnWatering();
+    }
     else
     {
         nullCommand(ptrToCommandName);
     }
+    return true;
 }
 void setup()
 {
     // initialize the serial communication:
     Serial.begin(115200);
     cLog("Setting up the Watering Machine");
-    // StaticJsonDocument<500> doc;
-    /*
-      #define LIGHT_DURATION 3600000  //1h in ms
-      #define LIGHT_INTERVAL 86400000 //24h in ms
-#define WATERING_CYCLE_DURATION 10000
-#define WATERING_CYCLES 250
-#define WATERING_CYCLE_PAUSE_DURATION 5000
-#define WATERING_MOISTURE_CRITICAL 45
-      */
-    // 600000 ms=10 min
-    // 14400000 ms = 4 h
-    //28800000 ms= 8h
-    //57600000 ms =16h
-    //char json[] =
-    //    "{\"sensor\":\"gps\",\"LIGHTING_INTERVAL\":57600000,\"LIGHTING_DURATION\":28800000,\"WATERING_MAX_DURATION\":600000,\"MOISTURE_TRESHOLD\":34,\"data\":[48.756080,2.302038]}";
-    //cLog("Deserializing Config");
-    //cLog(json);
-    // Deserialize the JSON document
-    //DeserializationError error = deserializeJson(doc, json);
-
-    // Test if parsing succeeds.
-    /*if (error)
-    {
-        Serial.print(F("deserializeJson() failed: "));
-        Serial.println(error.c_str());
-        return;
-    }*/
-    //loadWateringConfig(json, config);
-    //tak sie tworzy obiekty bez parametrow?!?!?!?!
     unsigned long ONE_HOUR = 1000 * 60 * 60;
     config.LIGHTING_DURATION = ONE_HOUR * 8;
     config.LIGHTING_INTERVAL = ONE_HOUR * 16;
     config.WATERING_MAX_DURATION = ONE_HOUR / 6;
     config.WATERING_MAX_INTERVAL = ONE_HOUR * 24 * 10;
     config.WATERING_MIN_INTERVAL = ONE_HOUR;
-
-    /**
-     * 
-     * ANALOG
-     */
-    ads.setGain(GAIN_ONE);
-    ads.begin();
-    delay(100);
-
+    config.MOISTURE_TRESHOLD = 50;
+    config.WATERING_STOP_TRESHOLD = 80;
+    cLog("Adding sensors");
     static std::vector<MoistureSensor> sensors;
-    sensors.push_back(MoistureSensor(Sensor1ReadFunc)); //strange object creation
-    sensors.push_back(MoistureSensor(Sensor2ReadFunc));
-    //sensors[0].init();
-    //sensors[1].init();
-    delay(100);
-    //cLog("Sensor:");
-    //Serial.println(sensors[0].read());
-    //cLog("Sensor:");
-    //Serial.println(sensors[1].read());
-
-    //mb->setupInterruptHandler(12, mbInterruptHandler, CHANGE);
-
-    // but actually the LED is on; this is because
-    // it is active low on the ESP-01)
+    sensors.push_back(MoistureSensor(Sensor1ReadFunc, sensorInitFunc)); //strange object creation
+    sensors.push_back(MoistureSensor(Sensor2ReadFunc, sensorInitFunc));
     static StateFactory sf;
+    cLog("Creating WateringMachine object");
     wateringMachine = new WateringMachine(config, sf, light, pump, sensors); //how to apss sf by reference when no parameters?
+    cLog("Initiating WateringMachine object");
     wateringMachine->init();
     cLog("Setting up has finished");
 };
 void loop()
 {
-    //light.turnOn();
-    //delay(2000);
-    //light.turnOff();
     bool received = getCommandLineFromSerialPort(CommandLine); //global CommandLine is defined in CommandLine.h
     if (received)
         serialCommand(CommandLine);
 
     wateringMachine->tick();
     delay(5000);
-    // light.
 };

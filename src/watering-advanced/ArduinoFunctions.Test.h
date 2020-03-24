@@ -1,9 +1,9 @@
-#include "Arduino.h"
-#include <Wire.h>
-#include <Adafruit_ADS1015.h>
 #ifndef ArduinoFunctionsTest_h
 #define ArduinoFunctionsTest_h
-Adafruit_ADS1115 ads;
+bool sensorInitFunc()
+{
+    return true;
+}
 float Sensor1ReadFunc()
 {
     return 10;

@@ -26,13 +26,9 @@ bool SimplePump::start(int speed)
     cLog("Starting the pump");
 
     this->_startFunc(speed);
-    cLog("Starting the pump2");
     this->nextState(PumpCommand::COMMAND_START);
     this->sinceLastChangeChrono = millis();
-    cLog("Starting the pump3");
-    Serial.println(PumpStates::STATE_ON);
-    Serial.println(this->state );
-    Serial.println(this->state == PumpStates::STATE_ON);
+
     return this->state == PumpStates::STATE_ON;
 }
 

@@ -40,14 +40,19 @@ bool IdleState::tick()
         cLog("Moisture under MOISTURE_TRESHOLD: " + String(sensorsAvg) + '<' + String(this->context->config.MOISTURE_TRESHOLD));
         return this->handleWatering();
     }
+
     else if (this->context->pump.getDurationSinceLastChange() > this->context->config.WATERING_MAX_INTERVAL)
     {
-        cLog("Moisture under MOISTURE_TRESHOLD: " + String(sensorsAvg) + '<' + String(this->context->config.MOISTURE_TRESHOLD));
+        cLog("Moisture duration since last change: " + String(this->context->pump.getDurationSinceLastChange()) + '>' + String(this->context->config.WATERING_MAX_INTERVAL));
         return this->handleWatering();
     }
     else if (this->context->light.getDurationSinceLastChange() > this->context->config.LIGHTING_INTERVAL)
     {
         cLog(String("Time passed since last ligting is higher than LIGHTING_INTERVAL: ") + String(this->context->light.getDurationSinceLastChange()) + String('>') + String(this->context->config.LIGHTING_INTERVAL));
         return this->handleLighting();
+    }
+    else if (sensorsAvg > this->context->config.MOISTURE_TRESHOLD)
+    {
+        cLog("Moisture over MOISTURE_TRESHOLD: " + String(sensorsAvg) + '>' + String(this->context->config.MOISTURE_TRESHOLD));
     }
 }

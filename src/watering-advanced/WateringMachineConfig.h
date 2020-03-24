@@ -19,6 +19,8 @@ struct WateringMachineConfig
   unsigned long WATERING_MAX_INTERVAL;
   unsigned long WATERING_MIN_INTERVAL;
   unsigned long MOISTURE_TRESHOLD;
+  unsigned long MOISTURE_MEASUREMENT_INTERVAL;
+  unsigned long WATERING_STOP_TRESHOLD;
   /*
   char nodeRedHostname[128];
   char nodeRedUser[64];
