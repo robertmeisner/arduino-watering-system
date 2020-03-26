@@ -4,7 +4,7 @@
   Released into the public domain.
 */
 #ifndef SimpleSwitch_h
-#include "SwitchStateMachine.h"
+#include "StateMachineInterfaces/SwitchStateMachine.h"
 #define SimpleSwitch_h
 
 class SimpleSwitch : public SwitchStateMachine

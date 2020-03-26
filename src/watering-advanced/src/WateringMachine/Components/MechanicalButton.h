@@ -6,8 +6,8 @@
 
 #ifndef MechanicalButton_h
 #define MechanicalButton_h
-#include "ButtonStateMachine.h"
-#include "Arduino.h"
+#include "StateMachineInterfaces/ButtonStateMachine.h"
+#include <Arduino.h>
 
 class MechanicalButton : public ButtonStateMachine
 {

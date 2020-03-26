@@ -2,10 +2,9 @@
 //https://www.drdobbs.com/cpp/state-patterns-c/184404132?pgno=1
 #ifndef WateringMachine_h
 #define WateringMachine_h
-//#include "state-pattern/WateringMachineStateBase.h"
 #include <vector>
 
-#include "StateTypeEnum.h"
+#include "States/StateTypeEnum.h"
 #include "WateringMachineConfig.h"
 
 class WateringMachineStateBase;

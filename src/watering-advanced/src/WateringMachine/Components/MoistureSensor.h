@@ -3,7 +3,7 @@
   Created by Robert Meisner, November 2, 2007.
   Released into the public domain.
 */
-#include "StateMachine.h"
+#include "StateMachineInterfaces/StateMachine.h"
 
 #ifndef MoistureSensor_h
 #define MoistureSensor_h

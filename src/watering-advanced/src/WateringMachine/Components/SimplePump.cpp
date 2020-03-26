@@ -1,6 +1,6 @@
 #include "SimplePump.h"
-#include "Arduino.h"
-#include "CustomLog.h"
+#include <Arduino.h>
+#include "../Utils/CustomLog.h"
 // IMPLEMENTATION
 bool SimplePumpInitMockFunc()
 {

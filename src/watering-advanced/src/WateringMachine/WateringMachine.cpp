@@ -1,12 +1,12 @@
 #include "WateringMachine.h"
 #include "WateringMachineConfig.h"
-#include "WateringMachineStateBase.h"
-#include "CustomLog.h"
-#include "Light.h"
-#include "MoistureSensor.h"
-#include "SimplePump.h"
-#include "IdleState.h"
-#include "StateFactory.h"
+#include "Components/Light.h"
+#include "Components/MoistureSensor.h"
+#include "Components/SimplePump.h"
+#include "States/WateringMachineStateBase.h"
+#include "States/IdleState.h"
+#include "States/StateFactory.h"
+#include "Utils/CustomLog.h"
 
 WateringMachine::WateringMachine(WateringMachineConfig &doc, StateFactory &sf, Light &l, SimplePump &sp, std::vector<MoistureSensor> &ms) : config(doc), stateFactory(sf), light(l), pump(sp), moistureSensors(ms)
 {

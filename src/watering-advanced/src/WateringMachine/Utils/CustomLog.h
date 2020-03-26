@@ -1,5 +1,5 @@
 #ifndef CustomDebug_h
-#include "Arduino.h"
+#include <Arduino.h>
 #define CustomDebug_h
 enum DebugLevel
 {

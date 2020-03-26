@@ -1,11 +1,13 @@
 #include "IdleState.h"
-#include "WateringMachine.h"
-#include "WateringMachineConfig.h"
-#include "CustomLog.h"
-#include "Light.h"
-#include "SimplePump.h"
 #include "StateFactory.h"
-#include "MoistureSensor.h"
+#include "../WateringMachine.h"
+#include "../WateringMachineConfig.h"
+#include "../Components/Light.h"
+#include "../Components/SimplePump.h"
+#include "../Components/MoistureSensor.h"
+#include "../Utils/CustomLog.h"
+IdleState::IdleState() : WateringMachineStateBase{} {}
+IdleState::IdleState(WateringMachine *wm) : WateringMachineStateBase{wm} {}
 const char *IdleState::getName()
 {
     return "IdleState";

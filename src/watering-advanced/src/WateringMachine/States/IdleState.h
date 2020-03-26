@@ -1,12 +1,14 @@
 #ifndef IDLE_STATE_H
 #define IDLE_STATE_H
 #include "WateringMachineStateBase.h"
+class WateringMachine;
 //#include "../WateringMachine.h"
 class IdleState : public WateringMachineStateBase
 {
 public:
-    //IdleState(WateringMachine wm) : context(wm) {}
-    using WateringMachineStateBase::WateringMachineStateBase;
+    IdleState();
+    IdleState(WateringMachine *wm);
+    //using WateringMachineStateBase::WateringMachineStateBase;
     const char *getName();
     bool handleWatering();
     bool handleLighting();

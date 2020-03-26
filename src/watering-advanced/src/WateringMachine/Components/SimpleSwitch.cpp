@@ -1,5 +1,5 @@
 #include "SimpleSwitch.h"
-#include "CustomLog.h"
+#include "../Utils/CustomLog.h"
 //IMPLEMENTATION
 bool SimpleSwitchInitMockFunc()
 {

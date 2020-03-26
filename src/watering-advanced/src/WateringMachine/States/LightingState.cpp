@@ -1,10 +1,12 @@
 #include "LightingState.h"
-#include "WateringMachine.h"
-#include "Light.h"
-#include "SimplePump.h"
-#include "CustomLog.h"
 #include "StateFactory.h"
+#include "../WateringMachine.h"
+#include "../Components/Light.h"
+#include "../Components/SimplePump.h"
+#include "../Utils/CustomLog.h"
 //LightingState::LightingState(WateringMachine* wm): WateringMachineStateBase(wm){}
+LightingState::LightingState() : WateringMachineStateBase{} {}
+LightingState::LightingState(WateringMachine *wm) : WateringMachineStateBase{wm} {}
 const char *LightingState::getName()
 {
     return "LightingState";

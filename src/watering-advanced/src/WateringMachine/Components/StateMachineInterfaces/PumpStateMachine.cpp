@@ -1,5 +1,4 @@
 #include "PumpStateMachine.h"
-#include "Arduino.h"
 PumpStates PumpStateMachine::nextState(PumpCommand command)
 {
     switch (this->state)

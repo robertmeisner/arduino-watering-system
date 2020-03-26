@@ -1,28 +1,30 @@
-#include "Arduino.h"
-#include "SimplePump.h"
-#include "Light.h"
-#include "MoistureSensor.h"
-#include "MechanicalButton.h"
-#include "CustomLog.h"
-#include "WateringMachine.h"
-#include "WateringMachineConfig.h"
-#include "WateringMachineStateBase.h"
+#include <Arduino.h>
+#include "src/WateringMachine/Components/SimplePump.h"
+#include "src/WateringMachine/Components/Light.h"
+#include "src/WateringMachine/Components/MoistureSensor.h"
+#include "src/WateringMachine/Components/MechanicalButton.h"
+#include "src/WateringMachine/Utils/CustomLog.h"
+#include "src/WateringMachine/WateringMachine.h"
+#include "src/WateringMachine/WateringMachineConfig.h"
+/*#include "WateringMachineStateBase.h"
 #include "LightingState.h"
 #include "IdleState.h"
-#include "WateringState.h"
-#include "StateFactory.h"
-#include "CommandLine.h"
+#include "WateringState.h"*/
+#include "src/WateringMachine/States/StateFactory.h"
+#include "src/WateringMachine/Utils/CommandLine.h"
 //#define WATERING_TEST 1
 
 #ifdef WATERING_TEST
-#include "ArduinoFunctions.Test.h"
+#include "src/Firmware/Functions.Test.h"
 #else
-#include "ArduinoFunctions.h"
+#include "src/Firmware/Arduino/ControlFunctions.v1.h"
 #endif
-
+//undefined reference jesli headers are in folders 
+// solution after few hours of research was to put everything into src folder.
 //MechanicalButton *mb = new MechanicalButton(12);
 //ALWAYS USE h and cpp files!!!!! laways h only declrations and cpp for definiton
 //always use ifnotdef def
+// dont use Arduino ide to write a code / 
 // calling global variables in global scope is not permitted oO //cry
 //https://community.blynk.cc/t/error-isr-not-in-iram/37426/16
 //ICACHE_RAM_ATTR void mbInterruptHandler(void)

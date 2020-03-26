@@ -2,7 +2,7 @@
 #include "LightingState.h"
 #include "WateringState.h"
 #include "IdleState.h"
-class WateringMachine;
+//class WateringMachine;
 StateFactory::StateFactory() {}
 WateringMachineStateBase *StateFactory::getState(StateType type, WateringMachine *m)
 {

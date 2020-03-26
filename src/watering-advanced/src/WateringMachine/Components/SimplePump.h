@@ -5,7 +5,7 @@
 */
 
 #ifndef SimplePumps_h
-#include "PumpStateMachine.h"
+#include "StateMachineInterfaces/PumpStateMachine.h"
 #define SimplePumps_h
 
 class SimplePump : public PumpStateMachine

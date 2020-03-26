@@ -1,8 +1,10 @@
 #include "WateringState.h"
-#include "WateringMachine.h"
-#include "SimplePump.h"
-#include "Light.h"
-#include "CustomLog.h"
+#include "../WateringMachine.h"
+#include "../Components/SimplePump.h"
+#include "../Components/Light.h"
+#include "../Utils/CustomLog.h"
+WateringState::WateringState() : WateringMachineStateBase{} {}
+WateringState::WateringState(WateringMachine *wm) : WateringMachineStateBase{wm} {}
 const char *WateringState::getName()
 {
     const char *msg = "WateringState";
@@ -57,7 +59,7 @@ bool WateringState::tick()
     //if avg moisture is higher than XXX stop Watering
     if (sensorsAvg > (this->context->config.WATERING_STOP_TRESHOLD))
     {
-        cLog(String("Moisture is over WATERING_STOP_TRESHOLD: ") + String(sensorsAvg) + ">" + String(this->context->config.WATERING_STOP_TRESHOLD ), DebugLevel::DEBUG);
+        cLog(String("Moisture is over WATERING_STOP_TRESHOLD: ") + String(sensorsAvg) + ">" + String(this->context->config.WATERING_STOP_TRESHOLD), DebugLevel::DEBUG);
         //cLog( (this->context->config['MOISTURE_TRESHOLD']);
         cLog("Stopping Watering");
         return this->handleIdle();
@@ -68,6 +70,6 @@ bool WateringState::tick()
         cLog("Stopping Watering");
         return this->handleIdle();
     }
-    cLog(String("Moisture sensor is between MOISTURE_TRESHOLD and WATERING_STOP_TRESHOLD: ") +this->context->config.WATERING_STOP_TRESHOLD+ String(">")+sensorsAvg + String("<") + this->context->config.MOISTURE_TRESHOLD, DebugLevel::DEBUG);
+    cLog(String("Moisture sensor is between MOISTURE_TRESHOLD and WATERING_STOP_TRESHOLD: ") + this->context->config.WATERING_STOP_TRESHOLD + String(">") + sensorsAvg + String("<") + this->context->config.MOISTURE_TRESHOLD, DebugLevel::DEBUG);
     cLog("Watering State tick finished", DebugLevel::DEBUG);
 }

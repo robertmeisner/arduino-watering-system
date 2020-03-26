@@ -3,10 +3,13 @@
 #include "WateringMachineStateBase.h"
 
 //#include "../WateringMachine.h"
+class WateringMachine;
 class WateringState : public WateringMachineStateBase
 {
 public:
     // WateringState(WateringMachine wm) : context(wm) {}
+    WateringState();
+    WateringState(WateringMachine *wm);
     using WateringMachineStateBase::WateringMachineStateBase;
     const char *getName();
     bool handleWatering();
