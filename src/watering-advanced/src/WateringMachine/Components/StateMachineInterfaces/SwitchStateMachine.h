@@ -20,6 +20,6 @@ public:
   virtual bool turnOff() = 0;
   virtual ~SwitchStateMachine() {} // Destructor
 protected:
-  SwitchStates nextState(SwitchCommand command);
+  int nextState(int command);
 };
 #endif

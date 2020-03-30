@@ -35,7 +35,7 @@ private:
   bool (*_initFunc)();
   int _moistureReadingNumber = 0;
   float _moistureReadings[MOISTURE_READINGS_COUNT];
-  MoistureSensorStates nextState(MoistureSensorCommand p);
+  int nextState(int command);
 };
 
 #endif

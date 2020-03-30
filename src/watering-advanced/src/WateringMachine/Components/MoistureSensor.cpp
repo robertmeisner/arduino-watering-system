@@ -49,7 +49,7 @@ float MoistureSensor::readAvg()
 
   return avg / MOISTURE_READINGS_COUNT;
 }
-MoistureSensorStates MoistureSensor::nextState(MoistureSensorCommand command)
+int MoistureSensor::nextState(int command)
 {
 
   switch (this->state)

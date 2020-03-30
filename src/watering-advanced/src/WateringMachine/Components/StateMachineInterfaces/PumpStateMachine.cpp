@@ -1,5 +1,5 @@
 #include "PumpStateMachine.h"
-PumpStates PumpStateMachine::nextState(PumpCommand command)
+int PumpStateMachine::nextState(int command)
 {
     switch (this->state)
     {

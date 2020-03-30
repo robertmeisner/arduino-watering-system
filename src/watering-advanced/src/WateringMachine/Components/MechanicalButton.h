@@ -13,14 +13,14 @@ class MechanicalButton : public ButtonStateMachine
 {
 public:
   MechanicalButton(int pin, ButtonModes mode=ButtonModes::MODE_PULLDOWN);
-  ButtonModes buttonMode = ButtonModes::MODE_PULLDOWN;
+  int buttonMode = ButtonModes::MODE_PULLDOWN;
   void setupInterruptHandler(uint8_t irq_pin, void (*interruptFunction)(void), int value);
   void handleInterrupt(void);
   bool init();
-  void tick();
+  bool tick();
 private:
   uint8_t _pin;
-  ButtonStates nextState(ButtonCommand p);
+  int nextState(int p);
 };
 
 

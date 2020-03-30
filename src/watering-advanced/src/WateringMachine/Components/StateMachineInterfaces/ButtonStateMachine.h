@@ -1,17 +1,17 @@
 #include "StateMachine.h"
-enum class ButtonModes
+enum ButtonModes
 {
     MODE_PULLUP,
     MODE_PULLDOWN
 };
-enum class ButtonStates
+enum ButtonStates
 {
     STATE_OPEN,
     STATE_RISING,
     STATE_CLOSED,
     STATE_IS_FALLING
 };
-enum class ButtonCommand
+enum ButtonCommand
 {
     COMMAND_PRESSED,
     COMMAND_RELEASED
@@ -19,10 +19,10 @@ enum class ButtonCommand
 class ButtonStateMachine : public StateMachine
 {
 public:
-    ButtonStates state = ButtonStates::STATE_OPEN;
-    ButtonStates getState();
+    int state = ButtonStates::STATE_OPEN;
+    int getState();
     bool isPressed();
     ~ButtonStateMachine() {} // Destructor
 private:
-    virtual ButtonStates nextState(ButtonCommand p) = 0;
+    virtual int nextState(int p) = 0;
 };

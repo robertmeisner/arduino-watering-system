@@ -1,5 +1,5 @@
 #include "ButtonStateMachine.h"
-ButtonStates ButtonStateMachine::getState()
+int ButtonStateMachine::getState()
 {
     return this->state;
 }
@@ -9,6 +9,6 @@ bool ButtonStateMachine::isPressed()
         return true;
     return false;
 }
-ButtonStates ButtonStateMachine::nextState(ButtonCommand p){
+int ButtonStateMachine::nextState(int p){
 
 }

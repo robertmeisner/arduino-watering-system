@@ -10,7 +10,7 @@ bool MechanicalButton::init()
 {
   pinMode(this->_pin, INPUT);
 }
-void MechanicalButton::tick(){
+bool MechanicalButton::tick(){
 
 }
 void MechanicalButton::setupInterruptHandler(uint8_t irq_pin, void (*ISR)(void), int value)
@@ -45,9 +45,9 @@ inline void MechanicalButton::handleInterrupt(void)
     break;
   }
 }
-ButtonStates MechanicalButton::nextState(ButtonCommand command)
+int MechanicalButton::nextState(int command)
 {
-  ButtonStates nextState = this->state;
+  ButtonStates nextState = ButtonStates(this->state); // or static_cast<ButtonStates>(this->state);
   switch (command)
   {
   case ButtonCommand::COMMAND_PRESSED:

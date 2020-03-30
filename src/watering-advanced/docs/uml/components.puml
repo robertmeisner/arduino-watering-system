@@ -1,0 +1,201 @@
+@startuml
+
+
+
+
+
+/' Objects '/
+
+class ButtonCommand {
+}
+
+
+class ButtonModes {
+}
+
+
+abstract class ButtonStateMachine {
+	+~ButtonStateMachine()
+	+getState() : ButtonStates
+	-{abstract} nextState(ButtonCommand p) : ButtonStates
+	+state : ButtonStates
+	+isPressed() : bool
+}
+
+
+class ButtonStates {
+}
+
+
+class Light {
+	+Light(bool onFunc(), bool offFunc(), bool initFunc())
+	+state : SwitchStates
+	+init() : bool
+	+isOn() : bool
+	-restartTimer() : bool
+	+turnOff() : bool
+	+turnOn() : bool
+	+getDurationSinceLastChange() : unsigned long
+	-sinceLastChangeChrono : unsigned long
+}
+
+
+class MechanicalButton {
+	+MechanicalButton(int pin, ButtonModes mode)
+	+buttonMode : ButtonModes
+	-nextState(ButtonCommand p) : ButtonStates
+	+init() : bool
+	-_pin : uint8_t
+	+handleInterrupt(void) : void
+	+setupInterruptHandler(uint8_t irq_pin, void(*interruptFunction)(void), int value) : void
+	+tick() : void
+}
+
+
+class MoistureSensor {
+	+MoistureSensor(float readFunc(), bool initFunc())
+	-state : MoistureSensorStates
+	+init() : bool
+	-_initFunc : bool (* ) ( )
+	-_moistureReadings : float
+	+read() : float
+	+readAvg() : float
+	-_readFunc : float (* ) ( )
+	-_moistureReadingNumber : int
+	-nextState(MoistureSensorCommand p) : int
+}
+
+
+abstract class PumpStateMachine {
+	+~PumpStateMachine()
+	+state : PumpStates
+	+{abstract} changeSpeed(int speed) : bool
+	+{abstract} start(int speed) : bool
+	+{abstract} stop() : bool
+	#nextState(PumpCommand command) : int
+}
+
+
+class SimplePump {
+	+SimplePump(bool(*startFunc)(int), bool(*stopFunc)(), bool(*changeSpeedFunc)(int), bool(*initFunc)(), int initialSpeed)
+	+changeSpeed(int speed) : bool
+	+init() : bool
+	+start(int speed) : bool
+	+stop() : bool
+	-_initFunc : bool (* ) ( )
+	-_stopFunc : bool (* ) ( )
+	-_changeSpeedFunc : bool (* ) ( int )
+	-_startFunc : bool (* ) ( int )
+	-_speed : int
+	+getDurationSinceLastChange() : unsigned long
+	-sinceLastChangeChrono : unsigned long
+}
+
+
+class SimpleSwitch {
+	+SimpleSwitch(bool onFunc(), bool offFunc(), bool initFunc())
+	+init() : bool
+	+turnOff() : bool
+	+turnOn() : bool
+	-_initFunc : bool (* ) ( )
+	-_offFunc : bool (* ) ( )
+	-_onFunc : bool (* ) ( )
+}
+
+
+abstract class StateMachine {
+	+~StateMachine()
+	+{abstract} init() : bool
+}
+
+
+abstract class SwitchStateMachine {
+	+SwitchStateMachine()
+	+~SwitchStateMachine()
+	+state : SwitchStates
+	+{abstract} turnOff() : bool
+	+{abstract} turnOn() : bool
+	#nextState(SwitchCommand command) : int
+}
+
+
+enum MoistureSensorCommand {
+	COMMAND_FINISHED_READ
+	COMMAND_READ
+}
+
+
+enum MoistureSensorStates {
+	STATE_IDLE
+	STATE_READING
+}
+
+
+enum PumpCommand {
+	COMMAND_START
+	COMMAND_STOP
+}
+
+
+enum PumpStates {
+	STATE_OFF
+	STATE_ON
+}
+
+
+enum SwitchCommand {
+	COMMAND_OFF
+	COMMAND_ON
+}
+
+
+enum SwitchStates {
+	SWITCH_OFF
+	SWITCH_ON
+}
+
+
+
+
+
+/' Inheritance relationships '/
+
+ButtonStateMachine <|-- MechanicalButton
+
+
+PumpStateMachine <|-- SimplePump
+
+
+SimpleSwitch <|-- Light
+
+
+StateMachine <|-- ButtonStateMachine
+
+
+StateMachine <|-- MoistureSensor
+
+
+StateMachine <|-- PumpStateMachine
+
+
+StateMachine <|-- SwitchStateMachine
+
+
+SwitchStateMachine <|-- SimpleSwitch
+
+
+
+
+
+/' Aggregation relationships '/
+
+ButtonStateMachine *-- ButtonStates
+
+
+MechanicalButton *-- ButtonModes
+
+
+
+
+
+@enduml

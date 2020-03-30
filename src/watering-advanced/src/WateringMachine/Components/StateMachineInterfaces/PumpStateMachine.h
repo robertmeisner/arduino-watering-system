@@ -13,12 +13,12 @@ enum PumpCommand
 class PumpStateMachine : public StateMachine
 {
 public:
-    PumpStates state = PumpStates::STATE_OFF;
+    int state = PumpStates::STATE_OFF;
      ~PumpStateMachine() {} // Destructor
      bool start(int speed) {};
      bool changeSpeed(int speed) {};
      bool stop()  {};
 
 protected:
-     PumpStates nextState(PumpCommand command); // Needs to be implemented by each subclass
+     int nextState(int command); // Needs to be implemented by each subclass
 };
