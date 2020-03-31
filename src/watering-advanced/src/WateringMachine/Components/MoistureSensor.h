@@ -23,13 +23,14 @@ enum MoistureSensorCommand
 class MoistureSensor : StateMachine
 {
 public:
-  MoistureSensor(float readFunc(),bool initFunc()=nullptr);
+  MoistureSensor(float readFunc(), bool initFunc() = nullptr);
 
   float read();
   float readAvg();
   bool init();
+  bool tick();
 
-private:
+protected:
   MoistureSensorStates state = MoistureSensorStates::STATE_IDLE;
   float (*_readFunc)();
   bool (*_initFunc)();

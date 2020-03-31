@@ -5,10 +5,10 @@
 */
 
 #ifndef SimpleMotors_h
-#include "StateMachineInterfaces/PumpStateMachine.h"
+#include "StateMachineInterfaces/MotorStateMachine.h"
 #define SimpleMotors_h
 
-class SimpleMotor : public PumpStateMachine
+class SimpleMotor : public MotorStateMachine
 {
 public:
   SimpleMotor(bool (*startFunc)(int),bool (*stopFunc)(),bool (*changeSpeedFunc)(int),bool (*initFunc)()=nullptr, int initialSpeed=100);
@@ -20,7 +20,7 @@ public:
 
   bool init();
 
-private:
+protected:
    bool (*_startFunc)(int);
    bool (*_stopFunc)();
    bool (*_changeSpeedFunc)(int);

@@ -87,3 +87,6 @@ bool MoistureSensor::init()
   }
   return false;
 }
+bool MoistureSensor::tick(){
+  
+}

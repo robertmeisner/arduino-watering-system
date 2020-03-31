@@ -10,12 +10,13 @@
 class SimpleSwitch : public SwitchStateMachine
 {
 public:
-  SimpleSwitch(bool onFunc(),bool offFunc(),bool initFunc()=nullptr);
+  SimpleSwitch(bool onFunc(), bool offFunc(), bool initFunc() = nullptr);
   bool init();
+  bool tick(){};
   bool turnOn();
   bool turnOff();
 
-private:
+protected:
   bool (*_onFunc)();
   bool (*_offFunc)();
   bool (*_initFunc)();
