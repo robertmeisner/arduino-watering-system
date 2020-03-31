@@ -62,7 +62,7 @@ float Sensor2ReadFunc()
     return _readAds(1, "Sensor #2");
 }
 
-bool startPumpFunc(int speed)
+bool startPumpFunc()
 {
     digitalWrite(14, LOW);
     return true;
@@ -78,10 +78,7 @@ bool initPumpFunc()
     stopPumpFunc();
     return true;
 }
-bool changePumpSpeedFunc(int speed)
-{
-    return true;
-}
+
 bool lightOnFunc()
 {
     digitalWrite(13, LOW);

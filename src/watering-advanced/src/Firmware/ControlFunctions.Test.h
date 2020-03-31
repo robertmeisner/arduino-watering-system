@@ -16,7 +16,7 @@ bool initPumpFunc()
 {
     return true;
 }
-bool startPumpFunc(int speed)
+bool startPumpFunc()
 {
     return true;
 }
@@ -24,10 +24,7 @@ bool stopPumpFunc()
 {
     return true;
 }
-bool changePumpSpeedFunc(int speed)
-{
-    return true;
-}
+
 bool lightOnFunc()
 {
     return true;
