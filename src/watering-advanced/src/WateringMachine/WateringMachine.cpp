@@ -61,5 +61,11 @@ bool WateringMachine::init()
 }
 void WateringMachine::tick()
 {
+    this->light.tick();
+    for (std::vector<MoistureSensor>::iterator it = this->moistureSensors.begin(); it != this->moistureSensors.end(); ++it)
+    {
+        it->tick();
+    }
+    this->pump.tick();
     this->state->tick();
 }

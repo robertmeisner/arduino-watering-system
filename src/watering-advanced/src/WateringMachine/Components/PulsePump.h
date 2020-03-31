@@ -8,21 +8,23 @@
 #include "SimplePump.h"
 #define PulsePump_h
 
-class PulsePump: public SimplePump
+class PulsePump : public SimplePump
 {
 public:
-  PulsePump(bool (*startFunc)(int),bool (*stopFunc)(),bool (*changeSpeedFunc)(int),bool (*initFunc)()=nullptr, int initialSpeed=100);
+    PulsePump(bool (*startFunc)(), bool (*stopFunc)(), bool (*initFunc)() = nullptr);
 
-  bool start(int speed = 100);
-  bool stop();
-  bool changeSpeed(int speed);
-  unsigned long getDurationSinceLastChange();
-  bool init();
+    bool start();
+    bool stop();
+    unsigned long getDurationSinceLastChange();
+    bool tick();
 
-private:
-  unsigned long sinceLastPulse;
-  unsigned long pulseDuration;
-  unsigned long pulseInterval;
+protected:
+    bool pulse();
+    bool pulsePause();
+    bool isPulsing = false;
+    unsigned lastPulseChange = 0;
+    unsigned long pulseDuration = 1000 * 10;
+    unsigned long pulseInterval = 1000 * 3;
 };
 
 #endif

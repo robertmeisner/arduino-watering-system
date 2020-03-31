@@ -11,21 +11,18 @@
 class SimplePump : public PumpStateMachine
 {
 public:
-  SimplePump(bool (*startFunc)(int),bool (*stopFunc)(),bool (*changeSpeedFunc)(int),bool (*initFunc)()=nullptr, int initialSpeed=100);
+  SimplePump(bool (*startFunc)(), bool (*stopFunc)(), bool (*initFunc)() = nullptr);
 
-  bool start(int speed = 100);
+  bool start();
   bool stop();
-  bool changeSpeed(int speed);
   unsigned long getDurationSinceLastChange();
-
   bool init();
+  bool tick(){};
 
-private:
-   bool (*_startFunc)(int);
-   bool (*_stopFunc)();
-   bool (*_changeSpeedFunc)(int);
-   bool (*_initFunc)();
-  int _speed = 0;
+protected:
+  bool (*_startFunc)();
+  bool (*_stopFunc)();
+  bool (*_initFunc)();
   unsigned long sinceLastChangeChrono;
 };
 

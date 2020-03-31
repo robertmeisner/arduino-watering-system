@@ -1,16 +1,14 @@
 #include "SimplePump.h"
-#include <Arduino.h>
 #include "../Utils/CustomLog.h"
 // IMPLEMENTATION
 bool SimplePumpInitMockFunc()
 {
     return true;
 }
-SimplePump::SimplePump(bool (*startFunc)(int), bool (*stopFunc)(), bool (*changeSpeedFunc)(int), bool (*initFunc)(), int initialSpeed) : PumpStateMachine()
+SimplePump::SimplePump(bool (*startFunc)(), bool (*stopFunc)(), bool (*initFunc)()) : PumpStateMachine()
 {
     this->_startFunc = startFunc;
     this->_stopFunc = stopFunc;
-    this->_changeSpeedFunc = changeSpeedFunc;
     if (initFunc == nullptr)
     {
         this->_initFunc = SimplePumpInitMockFunc;
@@ -19,34 +17,18 @@ SimplePump::SimplePump(bool (*startFunc)(int), bool (*stopFunc)(), bool (*change
     {
         this->_initFunc = initFunc;
     }
-    this->_speed = initialSpeed;
 }
-bool SimplePump::start(int speed)
+bool SimplePump::start()
 {
-    cLog("Starting the pump");
+    cLog("Starting the pump", DebugLevel::INFO);
 
-    this->_startFunc(speed);
+    this->_startFunc();
     this->nextState(PumpCommand::COMMAND_START);
     this->sinceLastChangeChrono = millis();
 
     return this->state == PumpStates::STATE_ON;
 }
 
-bool SimplePump::changeSpeed(int speed)
-{
-    if (this->state == PumpStates::STATE_OFF)
-    {
-        if (this->_changeSpeedFunc(speed))
-        {
-            this->_speed = speed;
-
-            if (this->state == PumpStates::STATE_ON && speed == 0)
-            {
-                return this->stop();
-            }
-        }
-    }
-}
 bool SimplePump::stop()
 {
 
@@ -56,7 +38,7 @@ bool SimplePump::stop()
         if (this->nextState(PumpCommand::COMMAND_STOP) == PumpStates::STATE_OFF)
             return true;
     }
-    cLog("Couldn't stop the pump");
+    cLog("Couldn't stop the pump", DebugLevel::ERROR);
     return false;
 }
 unsigned long SimplePump::getDurationSinceLastChange()
@@ -66,7 +48,7 @@ unsigned long SimplePump::getDurationSinceLastChange()
 
 bool SimplePump::init()
 {
-    cLog("Initiating SimplePump");
+    cLog("Initiating SimplePump", DebugLevel::DEBUG);
     this->_initFunc();
-    cLog("Finished initiating of SimplePump");
+    cLog("Finished initiating of SimplePump", DebugLevel::DEBUG);
 }
