@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "src/WateringMachine/Components/SimplePump.h"
+#include "src/WateringMachine/Components/PulsePump.h"
 #include "src/WateringMachine/Components/Light.h"
 #include "src/WateringMachine/Components/MoistureSensor.h"
 #include "src/WateringMachine/Components/MechanicalButton.h"
@@ -34,7 +34,7 @@
 
 WateringMachineConfig config;
 WateringMachine *wateringMachine;
-static SimplePump pump(startPumpFunc, stopPumpFunc, changePumpSpeedFunc, initPumpFunc, 0); //static so they wont be deleted after setup is detroyed
+static PulsePump pump(startPumpFunc, stopPumpFunc, initPumpFunc); //static so they wont be deleted after setup is detroyed
 static Light light(lightOnFunc, lightOffFunc, lightInitFunc);
 /**
  * 
@@ -71,10 +71,10 @@ void setup()
     // initialize the serial communication:
     Serial.begin(115200);
     cLog("Setting up the Watering Machine");
-    unsigned long ONE_HOUR = 1000 * 60 * 60;
+    const unsigned long ONE_HOUR = 1000 * 60 * 60;
     config.LIGHTING_DURATION = ONE_HOUR * 8;
     config.LIGHTING_INTERVAL = ONE_HOUR * 16;
-    config.WATERING_MAX_DURATION = ONE_HOUR / 6;
+    config.WATERING_MAX_DURATION = ONE_HOUR / 3;
     config.WATERING_MAX_INTERVAL = ONE_HOUR * 24 * 10;
     config.WATERING_MIN_INTERVAL = ONE_HOUR;
     config.MOISTURE_TRESHOLD = 50;
