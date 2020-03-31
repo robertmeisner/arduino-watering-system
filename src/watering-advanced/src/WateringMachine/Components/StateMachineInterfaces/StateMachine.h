@@ -6,7 +6,7 @@ class StateMachine
 public:
   //initialize the machine
   inline virtual bool init() = 0;
-  inline virtual bool tick(){};
+  inline virtual bool tick() =0;
   virtual ~StateMachine(){}; // Destructor
   int state = -1;
 
