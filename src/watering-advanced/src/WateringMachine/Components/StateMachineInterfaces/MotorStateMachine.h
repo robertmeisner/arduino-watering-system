@@ -4,7 +4,7 @@ enum MotorStates
     STATE_OFF,
     STATE_ON
 };
-enum PumpCommand
+enum MotorCommand
 {
     COMMAND_START,
     COMMAND_STOP

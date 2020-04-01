@@ -6,7 +6,7 @@ bool SimpleMotorInitMockFunc()
 {
     return true;
 }
-SimpleMotor::SimpleMotor(bool (*startFunc)(int), bool (*stopFunc)(), bool (*changeSpeedFunc)(int), bool (*initFunc)(), int initialSpeed) : PumpStateMachine()
+SimpleMotor::SimpleMotor(bool (*startFunc)(int), bool (*stopFunc)(), bool (*changeSpeedFunc)(int), bool (*initFunc)(), int initialSpeed) : MotorStateMachine()
 {
     this->_startFunc = startFunc;
     this->_stopFunc = stopFunc;
@@ -26,21 +26,21 @@ bool SimpleMotor::start(int speed)
     cLog("Starting the motor");
 
     this->_startFunc(speed);
-    this->nextState(PumpCommand::COMMAND_START);
+    this->nextState(MotorCommand::COMMAND_START);
     this->sinceLastChangeChrono = millis();
 
-    return this->state == PumpStates::STATE_ON;
+    return this->state == MotorStates::STATE_ON;
 }
 
 bool SimpleMotor::changeSpeed(int speed)
 {
-    if (this->state == PumpStates::STATE_OFF)
+    if (this->state == MotorStates::STATE_OFF)
     {
         if (this->_changeSpeedFunc(speed))
         {
             this->_speed = speed;
 
-            if (this->state == PumpStates::STATE_ON && speed == 0)
+            if (this->state == MotorStates::STATE_ON && speed == 0)
             {
                 return this->stop();
             }
@@ -53,7 +53,7 @@ bool SimpleMotor::stop()
     if (this->_stopFunc())
     {
         this->sinceLastChangeChrono = millis();
-        if (this->nextState(PumpCommand::COMMAND_STOP) == PumpStates::STATE_OFF)
+        if (this->nextState(MotorCommand::COMMAND_STOP) == MotorStates::STATE_OFF)
             return true;
     }
     cLog("Couldn't stop the motor");
